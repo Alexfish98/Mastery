@@ -1,0 +1,24 @@
+{
+  "appName": "Mastery",
+  "versionName": "1.0",
+  "versionCode": 1,
+  "packageName": "com.aistudio.applet.lgyayg",
+  "minSdkVersion": 24,
+  "targetSdkVersion": 36,
+  "compileSdkVersion": 36,
+  "buildType": "debug",
+  "apkFiles": [
+    "Mastery.apk",
+    "EUEE-Mastery.apk"
+  ],
+  "features": {
+    "offlineOnly": true,
+    "roomDatabase": true,
+    "streamingJsonIngestion": true,
+    "largeHeapEnabled": true,
+    "bottomNavTabs": 4,
+    "alarmManagerScheduling": true,
+    "canvasScientificGrapher": true,
+    "spacedRepetitionSm2": true
+  }
+}

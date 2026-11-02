@@ -1,0 +1,8 @@
+{
+  "name": "Mastery",
+  "description": "Production-ready, highly optimized premium offline study ecosystem with Room SQLite, high-speed streaming JSON parser, 2D Canvas math grapher, timetable scheduler with AlarmManager, Anki-style active recall SM-2 engine, and offline media sandboxing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

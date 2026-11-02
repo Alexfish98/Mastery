@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; connect-src 'none'; media-src data: blob:; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'">
+<title>EUEE Mastery</title>
+<!-- System-font stack keeps this app self-contained and offline-friendly. -->
+<style>
+/* ===== 1. TOKENS ===== */
+:root{--bg:#f3f6f4;--pn:#fff;--ink:#14201c;--mu:#52625c;--ln:#cfdad5;--ac:#0f766e;--on:#fff;--acs:#dff3ef;--ok:#166534;--okb:#dcfce7;--no:#b91c1c;--nob:#fee2e2;--wn:#854d0e;--wnb:#fef3c7;--fs:16px}
+[data-t=dark]{--bg:#0e1513;--pn:#16201d;--ink:#e8f1ed;--mu:#a3b5ae;--ln:#2d3e38;--ac:#5eead4;--on:#042f2a;--acs:#1c3a34;--ok:#86efac;--okb:#14351f;--no:#fca5a5;--nob:#42191c;--wn:#fcd34d;--wnb:#3b2f10}
+/* ===== 2. BASE ===== */
+*{box-sizing:border-box}html{font-size:var(--fs)}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.55 system-ui,"Segoe UI",Roboto,sans-serif;overflow-x:hidden}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+h1,h2,h3{line-height:1.25;margin:.2rem 0 .5rem}h1{font-size:1.15rem;margin:0}h2{font-size:1.35rem}h3{font-size:1.05rem}
+p{margin:.4rem 0;overflow-wrap:anywhere}small,.sm{font-size:.85rem}.mu{color:var(--mu)}
+header{position:sticky;top:0;z-index:5;background:var(--pn);border-bottom:1px solid var(--ln);padding:.5rem 1rem}
+.hr,.row{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}.hr h1{flex:1}.row{margin:.4rem 0}
+nav{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.4rem}nav .btn[aria-current=page]{background:var(--ac);color:var(--on);border-color:var(--ac)}
+main{max-width:70rem;margin:auto;padding:1rem}
+/* ===== 3. COMPONENTS ===== */
+.card{background:var(--pn);border:1px solid var(--ln);border-radius:.75rem;padding:1rem;margin:.75rem 0}
+.btn{border:1px solid var(--ln);background:var(--pn);border-radius:.6rem;padding:.5rem .85rem;min-height:2.6rem;cursor:pointer;font-weight:600}
+.btn:hover{border-color:var(--ac)}.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.p{background:var(--ac);border-color:var(--ac);color:var(--on)}.btn.d{color:var(--no)}
+.btn[aria-pressed=true]{background:var(--acs);border-color:var(--ac)}
+.chip{display:inline-block;padding:.1rem .6rem;border:1px solid var(--ln);border-radius:1rem;font-size:.82rem;background:var(--pn)}
+.chip.wn,.msg.wn{background:var(--wnb);color:var(--wn);border-color:transparent}
+.msg{padding:.6rem .8rem;border-radius:.6rem;margin:.5rem 0}.msg.ok,.opt.ok{background:var(--okb);color:var(--ok)}.msg.no,.opt.no{background:var(--nob);color:var(--no)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.6rem}.grid>.card{margin:0}
+.stat b{display:block;font-size:1.6rem}
+label{display:block;font-weight:600;margin:.5rem 0}label>input,label>select,label>textarea{display:block;margin-top:.25rem;font-weight:400}
+input,select,textarea{width:100%;padding:.55rem;border:1px solid var(--ln);border-radius:.5rem;background:var(--bg)}
+input[type=checkbox]{width:auto;display:inline;margin:0 .3rem 0 0}input[type=range]{padding:0}
+textarea{min-height:11rem;font:.85rem/1.4 ui-monospace,Consolas,monospace}
+.drop{border:2px dashed var(--ln);border-radius:.75rem;padding:1rem;text-align:center;font-weight:400}.drop.on{border-color:var(--ac);background:var(--acs)}
+table{width:100%;border-collapse:collapse}td,th{padding:.4rem;border-bottom:1px solid var(--ln);text-align:left;vertical-align:top;overflow-wrap:anywhere}.tw{overflow-x:auto}
+details>summary{cursor:pointer;font-weight:600}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--bg);padding:.6rem;border-radius:.5rem}
+.bar{height:.5rem;background:var(--ln);border-radius:1rem;overflow:hidden;flex:1;min-width:5rem}.bar i{display:block;height:100%;background:var(--ac);transition:width .2s}
+.ex p{white-space:pre-wrap}.ex h3{margin-top:.6rem}
+/* ===== 4. STUDY WORKSPACE ===== */
+#study{position:fixed;inset:0;height:100vh;height:100dvh;z-index:20;background:var(--bg);display:flex;flex-direction:column}
+#study .top,#study .bot{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;padding:.5rem 1rem;background:var(--pn);border-bottom:1px solid var(--ln)}
+#study .bot{border:0;border-top:1px solid var(--ln);padding-bottom:calc(.5rem + env(safe-area-inset-bottom))}
+#study .bd{flex:1;overflow:auto;padding:1rem;width:100%;max-width:50rem;margin:0 auto}
+.q{font-size:1.3rem;font-weight:650}.opt{display:block;width:100%;text-align:left;margin:.4rem 0;min-height:3rem}
+.fc{cursor:pointer;min-height:9rem;display:flex;flex-direction:column;justify-content:center;text-align:center}
+dialog{border:1px solid var(--ln);border-radius:.75rem;background:var(--pn);color:var(--ink);width:min(30rem,92vw)}dialog::backdrop{background:#0008}
+#toast{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);z-index:40;background:var(--ink);color:var(--bg);padding:.6rem 1rem;border-radius:.6rem;max-width:90vw}
+#print{display:none}
+@media print{body>*:not(#print){display:none!important}#print{display:block!important;color:#000;background:#fff;font:12pt/1.4 Georgia,serif}#print .pi{break-inside:avoid;margin:0 0 .9em}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+/* ===== UPGRADE PACK ===== */
+:root{--fd:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;--sh:0 1px 2px #0f2a2412,0 10px 28px -14px #0f2a2455}
+body{font-family:"Figtree",system-ui,"Segoe UI",Roboto,sans-serif;background:radial-gradient(60rem 28rem at 90% -8%,var(--acs),transparent 62%),var(--bg);background-attachment:fixed;padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+h1,h2,h3,.q{font-family:var(--fd)}
+header{background:color-mix(in srgb,var(--pn) 86%,transparent);backdrop-filter:blur(10px);padding-top:calc(.5rem + env(safe-area-inset-top,0px))}
+h1::before{content:"⚗";display:inline-grid;place-items:center;width:1.9rem;height:1.9rem;margin-right:.5rem;border-radius:.6rem;background:var(--ac);color:var(--on);font-size:1rem}
+nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}nav .btn{border-radius:2rem;white-space:nowrap;padding:.3rem .95rem;min-height:2.3rem}
+.card{border-radius:1.1rem;box-shadow:var(--sh)}
+.btn{border-radius:.75rem;transition:transform .12s,border-color .12s,background .12s}.btn:active{transform:scale(.97)}
+.btn.p{background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 72%,#000))}
+.bar{height:.6rem}.bar i{background:linear-gradient(90deg,var(--ac),color-mix(in srgb,var(--ac) 55%,#fff))}
+.hero{display:grid;grid-template-columns:8.5rem 1fr;gap:1.3rem;align-items:center;background:linear-gradient(135deg,var(--acs),var(--pn) 72%);border-radius:1.4rem;padding:1.3rem;margin:.75rem 0}
+.ring{width:100%;height:auto}.rg{transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1)}
+.hx h2{margin:0 0 .5rem;font-size:1.45rem}.pill{padding:.15rem .7rem;border-radius:2rem;background:var(--pn);border:1px solid var(--ln);font-size:.85rem;font-weight:600}
+.hx .row .bar{min-width:6rem}
+@media(max-width:34rem){.hero{grid-template-columns:1fr;justify-items:center;text-align:center}.hero .ring{max-width:9rem}.hero .row{justify-content:center}}
+.tp{margin:.7rem 0}.cols{display:flex;gap:.3rem;align-items:flex-end;height:9rem;padding-top:1.2rem}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:.7rem;color:var(--mu)}
+.col span{flex:none;height:1.1rem}.col i{flex:none;width:100%;min-height:3px;background:var(--acs);border:1px solid var(--ac);border-radius:.35rem .35rem 0 0;position:relative;display:flex;justify-content:center}
+.col i u{position:absolute;left:0;right:0;bottom:0;background:var(--ac)}.col i b{position:absolute;top:-1.1rem;color:var(--ink);font-size:.72rem}
+.badge{padding:.2rem .75rem;border-radius:2rem;border:1px dashed var(--ln);color:var(--mu);font-size:.85rem}.badge.on{border:1px solid var(--ac);background:var(--acs);color:var(--ink);font-weight:600}
+.sw::before{content:"";display:inline-block;width:.85rem;height:.85rem;margin-right:.45rem;border-radius:50%;background:var(--c);vertical-align:-1px}
+.fc{animation:pop .25s ease;border-radius:1.4rem;min-height:11rem}@keyframes pop{from{transform:scale(.97);opacity:.4}}
+.opt{border-radius:.95rem}.opt:not(:disabled):hover{border-color:var(--ac);background:var(--acs)}
+#study .top{padding-top:calc(.5rem + env(safe-area-inset-top,0px))}
+/* ===== macOS PACK ===== */
+:root{--fu:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter","Segoe UI",Roboto,sans-serif;--fd:"SF Pro Rounded","Nunito",-apple-system,"Inter",system-ui,sans-serif;--bg:#f2f2f7;--pn:#fff;--ink:#1d1d1f;--mu:#6e6e73;--ln:#d9d9de;--sbg:#e6e6ebb3;--sh:0 0 0 .5px #0003,0 14px 40px -12px #0005;--r:.85rem}
+[data-t=dark]{--bg:#1c1c1e;--pn:#2c2c2e;--ink:#f5f5f7;--mu:#a1a1a6;--ln:#3d3d41;--sbg:#28282bb3}
+html,body{height:100%}
+body{font-family:var(--fu);font-size:.95rem;letter-spacing:-.006em;display:grid;grid-template-columns:15.5rem 1fr;grid-template-rows:auto 1fr;height:100dvh;overflow:hidden;background:var(--bg);-webkit-font-smoothing:antialiased}
+body.nosb{grid-template-columns:0 1fr}body.nosb nav{display:none}
+header{grid-column:1/-1;display:flex;align-items:center;gap:.7rem;padding:.4rem .9rem;padding-top:calc(.4rem + env(safe-area-inset-top,0px));min-height:2.9rem;background:color-mix(in srgb,var(--pn) 72%,transparent);backdrop-filter:blur(24px) saturate(1.6);border-bottom:.5px solid var(--ln)}
+header .hr{flex:1;flex-wrap:nowrap;gap:.4rem}.hr h1{flex:1;text-align:center;font-size:.95rem;font-weight:700}h1::before{display:none}
+header .btn{min-height:1.8rem;padding:.1rem .6rem}
+.tl{display:flex;gap:.5rem}.tl button{width:.8rem;height:.8rem;padding:0;min-height:0;border-radius:50%;border:.5px solid #0004;cursor:pointer}.tl .r{background:#ff5f57}.tl .y{background:#febc2e}.tl .g{background:#28c840}.tl button:hover{filter:brightness(.88)}
+.bg{display:none}
+nav{grid-row:2;grid-column:1;display:flex;flex-direction:column;flex-wrap:nowrap;gap:.1rem;margin:0;padding:.7rem .6rem;overflow:auto;background:var(--sbg);backdrop-filter:blur(30px) saturate(1.8);border-right:.5px solid var(--ln)}
+nav small{margin:.9rem .6rem .25rem;font-weight:600;color:var(--mu);font-size:.74rem}
+nav .btn{display:flex;align-items:center;gap:.6rem;border:0;background:none;box-shadow:none;border-radius:.5rem;padding:.3rem .6rem;min-height:2rem;text-align:left;white-space:nowrap}
+nav .btn:hover{background:#7f7f7f22}nav .btn[aria-current=page]{background:var(--ac);color:var(--on)}
+.bk{margin:auto .3rem .2rem;font-size:.78rem;color:var(--mu)}
+#mn{grid-row:2;grid-column:2;overflow:auto;position:relative;min-width:0}
+main{max-width:none;padding:1.4rem clamp(1rem,3vw,2.8rem) 3rem}main>div{max-width:96rem;margin:auto}
+h2{font-size:1.7rem;letter-spacing:-.02em}
+.card{background:var(--pn);border:.5px solid var(--ln);border-radius:var(--r);box-shadow:0 1px 2px #0000000d,0 6px 20px -14px #0003}
+.btn{border:.5px solid var(--ln);background:var(--pn);border-radius:.5rem;min-height:2.1rem;padding:.25rem .85rem;font-weight:500;box-shadow:0 1px 1px #0000001f}
+.btn.p{background:var(--ac);color:var(--on);border-color:transparent}.btn.k{min-height:1.9rem;min-width:2rem;padding:.1rem .4rem}
+input,select,textarea{border-radius:.5rem;background:var(--pn);border:.5px solid var(--ln);box-shadow:inset 0 1px 1px #0000000d}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 .22rem color-mix(in srgb,var(--ac) 32%,transparent)}
+dialog{border:.5px solid var(--ln);border-radius:1.1rem;box-shadow:var(--sh);background:color-mix(in srgb,var(--pn) 94%,transparent);backdrop-filter:blur(30px);max-height:92dvh}dialog::backdrop{background:#0005;backdrop-filter:blur(3px)}dialog.w{width:min(60rem,96vw)}
+#toast{background:color-mix(in srgb,var(--ink) 90%,transparent);backdrop-filter:blur(14px);border-radius:2rem;padding:.55rem 1.1rem}
+#study{background:var(--bg)}#study .top,#study .bot{background:color-mix(in srgb,var(--pn) 75%,transparent);backdrop-filter:blur(24px)}
+#study .bd{max-width:62rem}.q{font-size:1.7rem;letter-spacing:-.02em;line-height:1.3}.opt{background:var(--pn);border-radius:.8rem;padding:.7rem 1rem}
+.hero{background:linear-gradient(135deg,var(--acs),var(--pn) 70%)}
+@media(max-width:52rem){body{grid-template-columns:1fr}.bg{display:inline-block}nav{position:fixed;z-index:30;top:0;bottom:0;left:0;width:17rem;padding-top:3.4rem;transform:translateX(-102%);transition:transform .25s;background:var(--pn)}body.sb nav{transform:none;box-shadow:var(--sh)}#mn{grid-column:1}#sv,#fm,#fp{display:none}}
+</style></head><body>
+<header><div class="hr"><h1>Chemistry Mastery Lab</h1><span id="sv" class="chip" role="status">Loading…</span>
+<button class="btn" id="th" aria-label="Switch light or dark theme">Theme</button><button class="btn" id="fm" aria-label="Smaller text">A−</button><button class="btn" id="fp" aria-label="Larger text">A+</button></div>
+<nav id="nav" aria-label="Main"><button class="btn" data-v="dash">Dashboard</button><button class="btn" data-v="lib">Library</button><button class="btn" data-v="note">Notebook</button><button class="btn" data-v="imp">Import</button><button class="btn" data-v="exp">Export</button><button class="btn" data-v="set">Settings</button></nav></header>
+<div id="warn" class="msg wn" hidden role="alert"><strong>Browser storage is unavailable.</strong> You are in a temporary session: progress will be lost when this page closes. Download a backup from Settings before leaving.</div>
+<main id="app"><p>Loading…</p></main>
+<section id="study" hidden role="dialog" aria-modal="true" aria-label="Study workspace"></section>
+<dialog id="dlg"></dialog><div id="toast" role="status" aria-live="polite" hidden></div><div id="print" aria-hidden="true"></div>
+<noscript><p class="msg no">This app needs JavaScript enabled.</p></noscript>
+<script>
+"use strict";
+/* ===== 1. PURE LOGIC (no DOM; unit-testable) ===== */
+/*PURE-START*/
+const day=864e5,now=()=>Date.now();
+const norm=s=>String(s??"").toLowerCase().normalize("NFKC").replace(/[.,;:!?()[\]{}]/g," ").replace(/\s+/g," ").trim();
+const hash=s=>{let x=2166136261;for(const c of s){x^=c.codePointAt(0);x=Math.imul(x,16777619)}return(x>>>0).toString(36)};
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const csvCell=v=>{v=String(v??"");if(/^[=+@]|^-[^\d.]/.test(v))v="'"+v;return/[",\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+const toCSV=rows=>rows.map(r=>r.map(csvCell).join(",")).join("\r\n");
+/* Question schema: prompt, answers[] (required); id, options[], topic, difficulty, hints[], tags[], references[],
+   explanation, whyCorrect, commonMistakes, concept, workedExample, memoryTip, examTrap (optional).
+   Accepted variants: question|q -> prompt; answer|a -> answers; why -> explanation; tip -> memoryTip; choices -> options. */
+const TEXTS=[["explanation","why"],["whyCorrect"],["commonMistakes"],["concept"],["workedExample"],["memoryTip","tip"],["examTrap"]],LISTS=["hints","tags","references"];
+function nq(r){
+ if(!r||typeof r!=="object"||Array.isArray(r))throw "Record is not a JSON object";
+ const pick=(...k)=>{for(const x of k)if(r[x]!=null&&r[x]!=="")return r[x]};
+ const list=v=>(Array.isArray(v)?v:v==null?[]:[v]).map(x=>String(x).trim()).filter(Boolean);
+ const prompt=String(pick("prompt","question","q")??"").trim();
+ if(!prompt)throw "Missing question text (prompt, question or q)";
+ const answers=[...new Set(list(pick("answers","answer","a")))];
+ if(!answers.length)throw "Missing answer (answers, answer or a)";
+ const o={id:String(pick("id")??"").trim()||"q_"+hash(norm(prompt)),prompt,answers,
+  options:[...new Set(list(pick("options","choices")))].slice(0,20),
+  topic:String(pick("topic")??"").trim()||"General",difficulty:String(pick("difficulty")??"").trim().toLowerCase()};["type","unit","img"].forEach(k=>{const v=pick(k);if(v!=null)o[k]=String(v).trim()});if(pick("tol")!=null&&!isNaN(+pick("tol")))o.tol=+pick("tol");
+ TEXTS.forEach(k=>{const v=pick(...k);if(v!=null)o[k[0]]=String(v)});
+ LISTS.forEach(k=>{const v=list(r[k]);if(v.length)o[k]=v});
+ return o}
+function analyze(text){
+ let d;try{d=JSON.parse(text)}catch(e){return{err:"Invalid JSON: "+e.message}}
+ if(d&&!Array.isArray(d)&&Array.isArray(d.questions))d=d.questions;
+ if(!Array.isArray(d))return{err:'Expected an array of question objects (or {"questions":[...]}).'};
+ if(!d.length)return{err:"The JSON contains no questions."};
+ if(d.length>5000)return{err:"Too many questions ("+d.length+"). The limit is 5,000 per import."};
+ const ok=[],rej=[],ids=new Set(),txt=new Set();
+ d.forEach((r,i)=>{try{const q=nq(r),t=norm(q.prompt);
+  if(txt.has(t))throw "Duplicate question text inside the file";
+  if(ids.has(q.id))throw "Duplicate ID inside the file: "+q.id;
+  ids.add(q.id);txt.add(t);ok.push(q)}catch(e){rej.push({n:i+1,e:String(e&&e.message||e)})}});
+ return{ok,rej,total:d.length}}
+function plan(ok,cur){
+ const byId=new Map(cur.map(q=>[q.id,q])),byTxt=new Map(cur.map(q=>[norm(q.prompt),q])),p={add:[],rep:[],skip:[]};
+ ok.forEach(q=>{const a=byId.get(q.id),b=byTxt.get(norm(q.prompt));
+  if(a){if(norm(a.prompt)!==norm(q.prompt))p.skip.push({q,why:"ID "+q.id+" is already used by a different question"});
+   else if(JSON.stringify(a)===JSON.stringify(q))p.skip.push({q,why:"Identical question already in the bank"});else p.rep.push(q)}
+  else if(b)p.skip.push({q,why:"Same question text as "+b.id});else p.add.push(q)});
+ return p}
+/* Scheduler (Leitner boxes): box 0..5 -> next review after 10 min, 1, 3, 7, 14, 30 days.
+   Wrong answer: back to box 0. Correct AND confidence >= 2 AND the item was due: up one box.
+   Correct but unsure, or extra practice before it is due: box unchanged (no cramming credit). */
+const INT=[.007,1,3,7,14,30];
+function srsNext(r,ok,conf,t){t=t||now();r=r||{box:0,due:0};
+ if(!ok){r.box=0;r.due=t+INT[0]*day}
+ else if(r.due<=t){if(conf>=2)r.box=Math.min(5,r.box+1);r.due=t+INT[r.box]*day}
+ return r}
+/* Mastered = box>=4, 3+ correct answers, latest answer correct and not "unsure". Never from one correct answer. */
+const mastered=(p,r)=>!!p&&!!r&&r.box>=4&&p.ok>=3&&p.lo===1&&p.conf>=2;
+const nf_=s=>{const m=String(s).replace(/,/g,"").match(/^\s*([-+]?\d*\.?\d+(?:e[-+]?\d+)?)/i);return m?parseFloat(m[1]):NaN};
+const okOf=(q,v)=>{const n=norm(v);if(!n)return false;
+ if(q.type==="number"){const x=nf_(v);return !isNaN(x)&&q.answers.some(a=>{const y=nf_(a);return !isNaN(y)&&Math.abs(x-y)<=Math.abs(y)*(q.tol!=null?q.tol:.01)+1e-9})}
+ if(q.type==="formula"||(!q.type&&/\b(symbol|formula)\b/i.test(q.prompt)&&q.answers.every(a=>/^[A-Z(\[][A-Za-z0-9₀-₉()⁺⁻²³⁴+\-\[\]]*$/.test(a)))){const t=String(v).normalize("NFKC").replace(/\s+/g,"");return q.answers.some(x=>String(x).normalize("NFKC").replace(/\s+/g,"")===t)}
+ return q.answers.some(x=>norm(x)===n)};
+function buildOpts(q,pool){
+ const acc=new Set(q.answers.map(norm)),seen=new Set(acc),wrong=[];
+ const right=q.options.find(o=>acc.has(norm(o)))||q.answers[0];seen.add(norm(right));
+ const add=o=>{const n=norm(o);if(n&&!seen.has(n)){seen.add(n);wrong.push(o)}};
+ q.options.forEach(add);
+ shuffle(pool.filter(x=>x.id!==q.id&&x.topic===q.topic)).forEach(x=>add(x.answers[0]));
+ shuffle(pool.filter(x=>x.id!==q.id)).forEach(x=>add(x.answers[0]));
+ return shuffle([right,...wrong.slice(0,3)])}
+const exp=q=>q.answers[0]+(q.answers.length>1?" (also accepted: "+q.answers.slice(1,4).join(", ")+(q.answers.length>4?", …":"")+")":"");
+/*PURE-END*/
+
+/* ===== 2. DOM HELPERS (imported text is only ever added as text nodes) ===== */
+const $=s=>document.querySelector(s);
+const h=(t,p,...c)=>{const e=document.createElement(t);for(const k in p||{}){const v=p[k];if(v==null||v===false)continue;if(k==="class")e.className=v;else if(k.slice(0,2)==="on")e.addEventListener(k.slice(2),v);else e.setAttribute(k,v===true?"":v)}
+ for(const x of c.flat(9))if(x!=null&&x!==false)e.append(x.nodeType?x:String(x));return e};
+let tt;const toast=m=>{const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,4500)};
+function ask(msg,{ok="Confirm",danger=false,input=null}={}){return new Promise(res=>{const d=$("#dlg");
+ d.replaceChildren(h("form",{method:"dialog"},h("div",{id:"dmsg"},msg),input&&h("textarea",{id:"din","aria-label":input,placeholder:input,rows:3}),
+  h("div",{class:"row"},h("button",{class:"btn "+(danger?"d":"p"),value:"y"},ok),h("button",{class:"btn",value:"n"},"Cancel"))));
+ d.setAttribute("aria-labelledby","dmsg");d.returnValue="";
+ d.onclose=()=>res(d.returnValue==="y"?(input?($("#din").value.trim()||true):true):false);d.showModal()})}
+const fmt=t=>t?new Date(t).toLocaleString():"—",stamp=()=>new Date().toISOString().slice(0,16).replace(/[:T]/g,"-"),safe=s=>String(s).replace(/[^\w.-]+/g,"_").slice(0,50);
+function dl(name,data,mime){if(window.NODL)return nodl(name,data);const b=data instanceof Blob?data:new Blob([data],{type:(mime||"application/json")+";charset=utf-8"});
+ const u=URL.createObjectURL(b),a=h("a",{href:u,download:name});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);S.prefs.lastExport=now();save("prefs")}
+
+/* ===== 3. STORAGE (versioned; one localStorage key per data area) =====
+ cml4.banks     question banks [{id,name,at,questions[]}]      cml4.progress  per-question counters + mastery state + notebook flag
+ cml4.attempts  attempt history (newest 5000)                  cml4.bookmarks starred question IDs
+ cml4.srs       per-question schedule {box,due}                cml4.sessions  {active session, finished-session log}
+ cml4.exams     exam results                                   cml4.prefs     theme, text size, active bank, last export
+ cml4.imports   imported-bank metadata                         cml4.meta      {v:4, saved:timestamp}
+ The old key "chemistryMasteryLab_database_v3" is read once for migration and never deleted. */
+const KEYS={banks:"cml4.banks",progress:"cml4.progress",attempts:"cml4.attempts",bookmarks:"cml4.bookmarks",srs:"cml4.srs",sessions:"cml4.sessions",exams:"cml4.exams",prefs:"cml4.prefs",imports:"cml4.imports",meta:"cml4.meta"},LEGACY="chemistryMasteryLab_database_v3";
+const DEF={banks:[],progress:{},attempts:[],bookmarks:{},srs:{},sessions:{active:null,log:[]},exams:[],prefs:{theme:"auto",fs:16,bank:null,lastExport:0},imports:[],meta:{v:4,saved:0}};
+const SAMPLE=[{id:"q1",topic:"Metallurgy",prompt:"What is the process of extracting a metal from its ore called?",answers:["extraction","metal extraction","extraction of metals"],options:["Extraction","Filtration","Crystallisation","Neutralisation"],explanation:"Metallurgy covers the scientific and technological processes used to extract metals from ores and refine them.",tip:"An ore is a naturally occurring material from which a metal or compound can be extracted economically."},
+{id:"q2",topic:"Metallurgy",prompt:"Which common aluminium ore is the principal commercial source of aluminium?",answers:["bauxite"],options:["Bauxite","Haematite","Galena","Limestone"],explanation:"Bauxite is the principal commercial ore used to produce aluminium. It contains hydrated aluminium oxides and impurities.",tip:"Haematite is an important iron ore; galena is a lead ore."},
+{id:"q3",topic:"Chemical symbols",prompt:"Write the chemical symbol for aluminium.",answers:["Al"],options:["Al","Au","Ag","Am"],explanation:"The chemical symbol for aluminium is Al. Symbols are case-sensitive: the first letter is uppercase and the second letter, if present, is lowercase.",tip:"Au is gold, Ag is silver, and Am is americium."},
+{id:"q4",topic:"Sulphur",prompt:"What is the name of the process used to extract sulphur from underground deposits using superheated water?",answers:["frasch process","frash process"],options:["Frasch process","Haber process","Hall process","Contact process"],explanation:"The Frasch process uses superheated water and compressed air to bring underground sulphur to the surface.",tip:"Frasch → sulphur; Haber → ammonia; Contact → sulphuric acid."},
+{id:"q5",topic:"Sulphur",prompt:"What is the chemical formula of sulphuric acid?",answers:["H2SO4","H₂SO₄"],options:["H₂SO₄","H₂SO₃","HSO₄","H₂S"],explanation:"Sulphuric acid has the formula H₂SO₄: two hydrogen atoms, one sulphur atom, and four oxygen atoms per molecule.",tip:"Sulphurous acid is H₂SO₃. Pay attention to the number of oxygen atoms."},
+{id:"q6",topic:"Air and gases",prompt:"Approximately what percentage of dry air is oxygen by volume?",answers:["21%","21","20.95%","20.95","about 21%"],options:["21%","50%","78%","1%"],explanation:"Dry air contains approximately 20.95% oxygen by volume, commonly rounded to 21%. Nitrogen is the most abundant gas at about 78%.",tip:"Remember approximately 78% nitrogen, 21% oxygen, and 1% other gases."},
+{id:"q7",topic:"Industrial chemistry",prompt:"Which industrial process manufactures ammonia from nitrogen and hydrogen?",answers:["haber process","haber-bosch process","haber bosch process"],options:["Haber process","Frasch process","Contact process","Solvay process"],explanation:"The Haber process combines nitrogen and hydrogen reversibly to produce ammonia using a catalyst at elevated temperature and pressure.",tip:"The balanced equation is N₂ + 3H₂ ⇌ 2NH₃."},
+{id:"q8",topic:"Sulphur",prompt:"Which crystalline allotrope of sulphur is stable below approximately 95.5°C at ordinary pressure?",answers:["rhombic sulphur","rhombic sulfur","alpha sulphur","alpha sulfur","α-sulphur","α-sulfur"],options:["Rhombic sulphur","Plastic sulphur","Graphite","White phosphorus"],explanation:"Rhombic (alpha) sulphur is the stable crystalline form below the transition temperature of about 95.5°C at ordinary pressure.",tip:"Above the transition temperature, monoclinic sulphur is the stable crystalline form."},
+{id:"q9",topic:"Phosphorus",prompt:"What is the molecular formula of white phosphorus?",answers:["P4","P₄"],options:["P₄","P₂","P₆","P₈"],explanation:"White phosphorus consists of P₄ tetrahedral molecules. It is more reactive than red phosphorus and requires appropriate laboratory precautions.",tip:"The subscript 4 means each molecule contains four phosphorus atoms."},
+{id:"q10",topic:"Industrial chemistry",prompt:"Which industrial process is used to manufacture sulphuric acid?",answers:["contact process"],options:["Contact process","Haber process","Frasch process","Hall process"],explanation:"The Contact process manufactures sulphuric acid. Sulphur dioxide is oxidised to sulphur trioxide, commonly using vanadium(V) oxide as a catalyst.",tip:"Contact process → sulphuric acid; Haber process → ammonia."}];
+const SD={q1:"easy",q2:"easy",q3:"easy",q4:"medium",q5:"easy",q6:"easy",q7:"medium",q8:"hard",q9:"medium",q10:"medium"};
+const sampleBank=()=>({id:"sample",name:"10 sample chemistry questions",at:now(),questions:SAMPLE.map(x=>nq({...x,difficulty:SD[x.id]}))});
+const kind=v=>Array.isArray(v)?"a":v&&typeof v==="object"?"o":"x",clone=v=>JSON.parse(JSON.stringify(v));
+let S={},store=null,saveErr="";
+function probe(){try{const l=globalThis.localStorage;l.setItem("cml4.probe","1");l.removeItem("cml4.probe");return l}catch(e){return null}}
+function cleanBanks(){let drop=0;S.banks=S.banks.filter(b=>b&&typeof b==="object"&&Array.isArray(b.questions)).map(b=>{const seen=new Set();
+ return{id:String(b.id||"bank_"+hash(String(b.name))),name:String(b.name||"Question bank"),at:+b.at||0,questions:b.questions.flatMap(x=>{try{const q=nq(x);if(seen.has(q.id))throw 0;seen.add(q.id);return[q]}catch(e){drop++;return[]}})}}).filter(b=>b.questions.length);return drop}
+function migrate(){let raw;try{raw=store.getItem(LEGACY)}catch(e){}if(!raw)return;
+ try{const o=JSON.parse(raw);if(!o||!Array.isArray(o.banks))return;
+  S.banks=o.banks.map(b=>({id:String(b.id),name:String(b.name||"Imported bank"),at:Date.parse(b.createdAt)||now(),questions:b.questions||[]}));cleanBanks();
+  S.prefs.bank=o.activeBankId;S.prefs.theme=o.settings&&o.settings.dark?"dark":"light";
+  const mk=id=>S.progress[id]||(S.progress[id]={att:0,ok:0,bad:0,conf:0,ans:"",at:0,lo:0,state:"learning",nb:false,rev:0});
+  for(const id in o.progress||{}){const p=o.progress[id]||{},x=mk(id);x.att=p.attempts|0;x.ok=p.correct|0;x.bad=Math.max(0,x.att-x.ok);S.srs[id]={box:Math.min(p.streak|0,3),due:0}}
+  for(const id in o.mistakes||{}){const m=o.mistakes[id]||{},x=mk(id);x.nb=true;x.bad=Math.max(x.bad,m.attempts|0);x.att=Math.max(x.att,x.bad+x.ok);x.ans=String(m.lastAnswer||"");x.at=Date.parse(m.lastWrongAt)||0;x.fm=Date.parse(m.firstWrongAt)||0}
+ }catch(e){S.banks=[]}}
+function load(){store=probe();S={};const warn=[];
+ for(const k in DEF){let v=clone(DEF[k]);
+  try{const raw=store&&store.getItem(KEYS[k]);if(raw){const p=JSON.parse(raw);if(kind(p)===kind(DEF[k]))v=p;else throw 0}}
+  catch(e){warn.push(k);try{store.setItem(KEYS[k]+".bad."+now(),store.getItem(KEYS[k]))}catch(_){}}
+  S[k]=v}
+ S.prefs={...DEF.prefs,...S.prefs};S.sessions={...DEF.sessions,...S.sessions};if(!Array.isArray(S.sessions.log))S.sessions.log=[];
+ if(!S.banks.length&&store)migrate();
+ const drop=cleanBanks();if(drop)warn.push(drop+" malformed question(s)");
+ if(!S.banks.length)S.banks=[sampleBank()];
+ if(!S.banks.some(b=>b.id===S.prefs.bank))S.prefs.bank=S.banks[0].id;
+ return warn}
+function save(...ks){ks=ks.length?ks:Object.keys(KEYS);S.meta.saved=now();if(!ks.includes("meta"))ks.push("meta");let ok=true;
+ for(const k of ks){try{if(!store)throw new Error("Storage unavailable");store.setItem(KEYS[k],JSON.stringify(S[k]))}catch(e){ok=false;saveErr=e&&e.name==="QuotaExceededError"?"Storage full":(e.message||"Save failed")}}
+ if(ok)saveErr="";status();return ok}
+function status(){const e=$("#sv");if(!e)return;const bad=!store||saveErr;e.textContent=!store?"⚠ Temporary session — not saved":saveErr?"⚠ "+saveErr+" — export a backup":"● Saved "+(S.meta.saved?new Date(S.meta.saved).toLocaleTimeString():"—");e.className="chip"+(bad?" wn":"")}
+function applyPrefs(){const t=S.prefs.theme==="auto"?(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"):S.prefs.theme;document.documentElement.dataset.t=t;document.documentElement.style.setProperty("--fs",S.prefs.fs+"px")}
+
+/* ===== 4. DATA ACCESS ===== */
+const A=()=>S.banks.find(b=>b.id===S.prefs.bank)||S.banks[0],Q=()=>A().questions,qid=id=>Q().find(q=>q.id===id);
+const peek=id=>S.progress[id]||null,P=id=>S.progress[id]||(S.progress[id]={att:0,ok:0,bad:0,conf:0,ans:"",at:0,lo:0,state:"learning",nb:false,rev:0});
+const isDue=q=>{const r=S.srs[q.id];return !!r&&r.due<=now()},num=x=>+x||0,CL={1:"Unsure",2:"Fairly sure",3:"Sure"};
+function topicStats(){const m={};Q().forEach(q=>{const p=peek(q.id),x=m[q.topic]||(m[q.topic]={topic:q.topic,n:0,att:0,ok:0});x.n++;if(p){x.att+=num(p.att);x.ok+=num(p.ok)}});return Object.values(m).map(x=>({...x,acc:x.att?x.ok/x.att:0}))}
+const FILT={all:()=>Q(),due:()=>Q().filter(isDue),new:()=>Q().filter(q=>!num(peek(q.id)&&peek(q.id).att)),marked:()=>Q().filter(q=>S.bookmarks[q.id]),
+ wrong:()=>Q().filter(q=>{const p=peek(q.id);return p&&p.nb&&p.state!=="mastered"}),r10:()=>shuffle(Q()).slice(0,10),
+ weak:()=>{const t=topicStats().filter(x=>x.att).sort((a,b)=>a.acc-b.acc).slice(0,3).map(x=>x.topic);return Q().filter(q=>t.includes(q.topic)&&(peek(q.id)||{}).state!=="mastered")}};
+const SRC=[["all","All questions"],["due","Due for review"],["new","Not yet attempted"],["weak","Weak topics"],["marked","Bookmarked"],["wrong","Incorrect (notebook)"],["r10","Random 10"]];
+function stats(){let att=0,ok=0,bad=0,mas=0,seen=0,due=0,open=0;
+ Q().forEach(q=>{const p=peek(q.id);if(p){if(num(p.att))seen++;att+=num(p.att);ok+=num(p.ok);bad+=num(p.bad);if(p.state==="mastered")mas++;if(p.nb&&p.state!=="mastered")open++}if(isDue(q))due++});
+ return{n:Q().length,seen,att,ok,bad,mas,learn:Math.max(0,seen-mas),due,open,acc:att?Math.round(ok/att*100)+"%":"—"}}
+let defer=false;
+function record(q,ok,ans,conf,mode,hints){const p=P(q.id),t=now();
+ p.att=num(p.att)+1;if(ok)p.ok=num(p.ok)+1;else p.bad=num(p.bad)+1;p.ans=ans;p.at=t;p.lo=ok?1:0;p.conf=conf;
+ if(!ok){p.nb=true;p.state="learning";p.man=0;p.fm=p.fm||t}
+ S.srs[q.id]=srsNext(S.srs[q.id],ok,conf,t);
+ if(!p.man)p.state=mastered(p,S.srs[q.id])?"mastered":"learning";
+ S.attempts.push({q:q.id,b:A().id,ok:ok?1:0,ans,at:t,c:conf,m:mode,h:hints|0,s:window.__dt?window.__dt():0});
+ if(S.attempts.length>5000)S.attempts.splice(0,S.attempts.length-5000);
+ if(!defer)save("progress","srs","attempts")}
+
+/* ===== 5. STUDY WORKSPACE ===== */
+const MODES={practice:"Practice (type the answer)",recall:"Active recall",flash:"Flashcards",quiz:"Multiple choice",exam:"Timed exam",review:"Review"};
+const EX=[["explanation","Explanation"],["whyCorrect","Why it is correct"],["concept","Concept"],["workedExample","Worked example"],["commonMistakes","Common mistakes"],["memoryTip","Memory tip"],["examTrap","Exam trap"]];
+let W=null,timer=0,view="dash";
+const cur=()=>qid(W.ids[W.i]),AA=()=>W.A[W.ids[W.i]]||(W.A[W.ids[W.i]]={}),optsOf=q=>W.opts[q.id]||(W.opts[q.id]=buildOpts(q,Q())),fmtT=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+function expl(q){const miss=[],d=h("div",{class:"card ex"});
+ EX.forEach(([k,l])=>q[k]?d.append(h("h3",{},l),h("p",{},q[k])):miss.push(l));
+ if(q.references)d.append(h("h3",{},"References (as supplied in the data; not verified by this app)"),h("ul",{},q.references.map(r=>h("li",{},r))));else miss.push("References");
+ d.append(h("p",{class:"mu sm"},miss.length?"Not provided for this question: "+miss.join(", ")+".":""));return d}
+function validW(a){const b=S.banks.find(x=>x.id===a.bank);if(!b||!Array.isArray(a.ids)||!MODES[a.mode])return false;const set=new Set(b.questions.map(q=>q.id));
+ a.ids=a.ids.filter(id=>set.has(id));a.i=Math.max(0,Math.min(a.i|0,a.ids.length-1));if(kind(a.A)!=="o")a.A={};if(kind(a.opts)!=="o")a.opts={};return a.ids.length>0}
+function startStudy(mode,list,title,ordered){if(!list.length){toast("No questions match this selection yet.");return}
+ W={mode,title,bank:A().id,ids:(ordered?list:shuffle(list)).map(q=>q.id),i:0,A:{},opts:{},end:mode==="exam"?now()+list.length*(S.prefs.exs||60)*1000:0,t0:now(),open:true,sum:null};openStudy()}
+function saveW(){S.sessions.active=W;save("sessions")}
+function openStudy(){if(!(history.state&&history.state.study))history.pushState({study:1},"");
+ $("#study").hidden=false;document.body.style.overflow="hidden";$("header").inert=true;$("#app").inert=true;W.open=true;saveW();drawStudy();
+ clearInterval(timer);if(W.end&&!W.sum){if(W.end<=now())return finish();timer=setInterval(tick,1000)}}
+function closeStudy(){clearInterval(timer);if(W&&W.sum){S.sessions.active=null;W=null}else if(W)W.open=false;save("sessions");
+ $("#study").hidden=true;document.body.style.overflow="";$("header").inert=false;$("#app").inert=false;if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});go()}
+function exitStudy(){const f=()=>history.state&&history.state.study?history.back():closeStudy();
+ if(W&&W.mode==="exam"&&!W.sum)ask("Leave the exam? Your answers are kept and the clock keeps running. Resume from the dashboard before time runs out.",{ok:"Leave"}).then(y=>y&&f());else f()}
+addEventListener("popstate",()=>{if(!$("#study").hidden)closeStudy()});
+addEventListener("beforeunload",e=>{if(W&&W.mode==="exam"&&!W.sum&&!$("#study").hidden){e.preventDefault();e.returnValue=""}});
+function tick(){const s=Math.max(0,Math.round((W.end-now())/1000)),e=$("#tm");if(e)e.textContent=fmtT(s);if(s<=0)finish()}
+const grade=(q,a,ok,ans)=>{a.done=true;a.ok=ok;if(!a.ans)a.ans=ans;record(q,ok,ans,a.c||2,W.mode,a.h)};
+function act(n,v){const q=cur(),a=AA();switch(n){
+ case"next":if(W.i<W.ids.length-1)W.i++;else return finishAsk();break;
+ case"prev":if(W.i>0)W.i--;break;
+ case"hint":if((q.hints||[]).length>(a.h||0))a.h=(a.h||0)+1;else{toast(q.hints?"No more hints for this question.":"No hints were provided for this question.");return}break;
+ case"show":{const rf=W.mode==="recall"||W.mode==="flash";if(rf&&!a.shown)a.shown=true;else if(a.done||rf||W.mode==="review")a.hx=!a.hx;else if(W.mode==="practice"||W.mode==="quiz")grade(q,a,false,"(answer revealed)");break}
+ case"flip":if(W.mode==="flash"||W.mode==="recall")a.shown=!a.shown;break;
+ case"conf":if(!a.done)a.c=v||((a.c||0)%3)+1;break;
+ case"pick":if(!a.done)a.ans=v;break;
+ case"check":{if(a.done||W.mode==="exam")return;const t=(a.ans||"").trim();if(!t){toast("Type or choose an answer first.");return}grade(q,a,okOf(q,t),t);break}
+ case"rate":a.c=v===2?3:1;grade(q,a,v>0,v>0?"(self-rated correct)":"(self-rated missed)");break;
+ case"retry":W.A[q.id]={};break;
+ case"mark":S.bookmarks[q.id]?delete S.bookmarks[q.id]:S.bookmarks[q.id]=1;save("bookmarks");break}
+ saveW();drawStudy()}
+async function flag(q){const p=P(q.id);if(p.rep){delete p.rep;save("progress");toast("Flag removed.");return drawStudy()}
+ const r=await ask("Describe the problem with this question. The flag is saved on this device only; export flagged questions from the Export Center.",{ok:"Flag question",input:"What is wrong with this question?"});
+ if(r){p.rep=typeof r==="string"?r:"(no note)";save("progress");drawStudy()}}
+async function pngAsk(q,i){const pa=h("input",{type:"checkbox",checked:true}),pe=h("input",{type:"checkbox"});
+ if(await ask(h("div",{},h("p",{},"Export this question as a PNG image."),h("label",{},pa,"Include the answer"),h("label",{},pe,"Include the explanation")),{ok:"Download PNG"}))qPng(q,i,pa.checked,pe.checked)}
+const fsToggle=()=>{if(!document.fullscreenEnabled){toast("This app already fills the screen.");return}const r=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();r&&r.catch&&r.catch(()=>toast("The browser blocked full screen."))};
+function drawStudy(){const el=$("#study");if(W.sum)return drawSum(el);
+ const q=cur(),a=AA(),m=W.mode,n=W.ids.length,i=W.i,exam=m==="exam",tx=m==="practice"||m==="quiz"||exam,p=peek(q.id)||{};
+ const mc=(m==="quiz"||exam)&&optsOf(q).length>=2,shown=!!(m==="review"||a.done||((m==="recall"||m==="flash")&&a.shown)),answered=W.ids.filter(id=>W.A[id]&&(W.A[id].done||(exam&&(W.A[id].ans||"").trim()))).length;
+ const top=h("div",{class:"top"},h("button",{class:"btn",onclick:exitStudy,"aria-label":"Exit to dashboard"},"✕ Exit"),h("strong",{},MODES[m]+" · "+(i+1)+" / "+n),
+  h("div",{class:"bar",role:"progressbar","aria-label":"Progress","aria-valuemin":1,"aria-valuemax":n,"aria-valuenow":i+1},h("i",{style:"width:"+((i+1)/n*100)+"%"})),
+  exam&&h("span",{class:"chip",id:"tm"},fmtT(Math.max(0,Math.round((W.end-now())/1000)))),
+  document.fullscreenEnabled&&h("button",{class:"btn",onclick:fsToggle,"aria-label":"Toggle full screen"},"⛶"));
+ const b=h("div",{class:"bd"});
+ b.append(h("div",{class:"row"},h("span",{class:"chip"},q.topic),q.difficulty&&h("span",{class:"chip"},q.difficulty),S.bookmarks[q.id]&&h("span",{class:"chip"},"★ Bookmarked"),p.rep&&h("span",{class:"chip wn"},"Flagged")));
+ if(m==="flash")b.append(h("div",{class:"card fc",role:"button",tabindex:"0","aria-label":"Flashcard — press to flip",onclick:()=>act("flip"),onkeydown:e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();act("flip")}}},
+  a.shown?[h("small",{class:"mu"},"Answer"),h("p",{class:"q"},exp(q))]:[h("small",{class:"mu"},"Question — press to flip"),h("p",{class:"q"},q.prompt)]));
+ else b.append(h("p",{class:"q"},q.prompt));
+ if(a.h>0&&q.hints)b.append(h("ul",{},q.hints.slice(0,a.h).map(x=>h("li",{},"Hint: "+x))));
+ if(tx&&!mc)b.append(h("label",{},"Your answer",h("input",{id:"ans",type:"text",autocomplete:"off",autocapitalize:"off",spellcheck:"false",value:a.ans||"",disabled:!!a.done,oninput:e=>{a.ans=e.target.value},onchange:saveW})));
+ if(mc)b.append(h("div",{role:"group","aria-label":"Answer choices"},optsOf(q).map((o,k)=>h("button",{class:"btn opt"+(a.done?(okOf(q,o)?" ok":a.ans===o?" no":""):""),"aria-pressed":String(a.ans===o),disabled:!!a.done,onclick:()=>act("pick",o)},(k+1)+". "+o))));
+ if(tx&&!a.done)b.append(h("div",{class:"row",role:"group","aria-label":"Confidence rating"},h("span",{class:"mu"},"Confidence:"),[1,2,3].map(c=>h("button",{class:"btn","aria-pressed":String(a.c===c),onclick:()=>act("conf",c)},CL[c]))));
+ if(!a.done&&(m==="practice"||m==="quiz"))b.append(h("div",{class:"row"},h("button",{id:"chk",class:"btn p",onclick:()=>act("check")},"Check answer"),h("button",{class:"btn",onclick:()=>act("show")},"Show answer (counts as missed)")));
+ if(m==="recall"||m==="flash"){if(!a.done)b.append(h("div",{class:"row"},h("button",{class:"btn",onclick:()=>act("flip")},a.shown?"Hide answer":"Show answer"),a.shown&&[["Missed it",0],["Got it, unsure",1],["Got it, sure",2]].map(([l,v])=>h("button",{class:"btn "+(v?"":"d"),onclick:()=>act("rate",v)},l))));
+  else b.append(h("div",{class:"msg "+(a.ok?"ok":"no"),role:"status"},a.ok?"Recorded as correct.":"Recorded as missed — added to your notebook."))}
+ if(a.done&&tx)b.append(h("div",{class:"msg "+(a.ok?"ok":"no"),role:"status"},(a.ok?"Correct.":"Not correct.")+(a.ok?"":" Expected: "+exp(q))));
+ if(shown&&!exam){if(m==="recall"||m==="review")b.append(h("div",{class:"msg ok"},"Answer: "+exp(q)));if(!a.hx)b.append(expl(q))}
+ b.append(h("div",{class:"row"},!exam&&h("button",{class:"btn",onclick:()=>act("hint")},"Hint ("+(a.h||0)+"/"+(q.hints||[]).length+")"),
+  h("button",{class:"btn","aria-pressed":String(!!S.bookmarks[q.id]),onclick:()=>act("mark")},"★ Bookmark"),h("button",{class:"btn",onclick:()=>flag(q)},p.rep?"Unflag":"Report question"),
+  h("button",{class:"btn",onclick:()=>pngAsk(q,Q().indexOf(q)+1)},"Save as image"),
+  shown&&!exam&&h("button",{class:"btn",onclick:()=>act("show")},a.hx?"Show explanation":"Hide explanation"),
+  a.done&&!exam&&m!=="review"&&h("button",{class:"btn",onclick:()=>act("retry")},"Try again")));
+ b.append(h("p",{class:"mu sm"},"Keys: ← → or PageUp/PageDown move · Enter check · h hint · s show answer · b bookmark · c confidence · f or Space flip · 1–9 choose option · Esc exit"));
+ const bot=h("div",{class:"bot"},h("button",{class:"btn",disabled:i===0,onclick:()=>act("prev")},"← Previous"),h("span",{class:"mu",style:"flex:1;text-align:center"},answered+" of "+n+" answered"),
+  h("button",{id:"nx",class:"btn p",onclick:()=>act("next")},i===n-1?(exam?"Finish exam":"Finish session"):"Next →"));
+ el.replaceChildren(top,b,bot);
+ if(m==="review"&&!a.seen){a.seen=1;P(q.id).rev=now();save("progress")}
+ const f=$("#ans:not([disabled])")||$("#chk")||$(".opt[aria-pressed=true]")||$("#nx");if(f)f.focus({preventScroll:true})}
+function finishAsk(){const un=W.ids.length-W.ids.filter(id=>W.A[id]&&(W.A[id].done||(W.A[id].ans||"").trim())).length;
+ if(W.mode==="exam")ask("Finish the exam now? "+un+" question(s) are unanswered and will score zero.",{ok:"Finish exam"}).then(y=>y&&finish());else finish()}
+function finish(){if(W.sum)return;clearInterval(timer);const ids=W.ids;defer=true;
+ if(W.mode==="exam")ids.forEach(id=>{const a=W.A[id]||{},q=qid(id);if(q&&!a.done&&(a.ans||"").trim()){a.done=true;a.ok=okOf(q,a.ans);record(q,a.ok,a.ans.trim(),a.c||2,"exam",0)}});
+ defer=false;let ok=0,ans=0;ids.forEach(id=>{const a=W.A[id]||{};if(a.done){ans++;if(a.ok)ok++}});
+ const secs=Math.round((now()-W.t0)/1000);W.sum={at:now(),ok,ans,total:ids.length,secs};
+ S.sessions.log.unshift({at:now(),mode:W.mode,title:W.title,bank:W.bank,ok,ans,total:ids.length,secs});S.sessions.log.length=Math.min(S.sessions.log.length,50);
+ if(W.mode==="exam"){S.exams.unshift({at:now(),bank:W.bank,total:ids.length,ok,ans,secs,rows:ids.map(id=>({id,ok:W.A[id]&&W.A[id].ok?1:0,ans:(W.A[id]&&W.A[id].ans)||""}))});S.exams.length=Math.min(S.exams.length,30)}
+ save("progress","srs","attempts","exams");saveW();drawStudy()}
+function drawSum(el){const s=W.sum,exam=W.mode==="exam",miss=W.ids.filter(id=>!(W.A[id]&&W.A[id].ok));
+ el.replaceChildren(h("div",{class:"top"},h("button",{class:"btn",onclick:exitStudy},"✕ Close"),h("strong",{},exam?"Exam results":"Session summary")),
+  h("div",{class:"bd"},h("h2",{},exam?(s.total?Math.round(s.ok/s.total*100):0)+"% — "+s.ok+" of "+s.total+" correct":s.ok+" of "+s.ans+" answered correctly"),
+   h("p",{class:"mu"},"Answered "+s.ans+" of "+s.total+" · time "+fmtT(s.secs)+(s.ans?" · accuracy "+Math.round(s.ok/s.ans*100)+"%":"")),
+   h("div",{class:"row"},miss.length>0&&h("button",{class:"btn p",onclick:()=>{const l=miss.map(qid).filter(Boolean);W=null;S.sessions.active=null;startStudy("practice",l,"Retry missed & unanswered")}},"Retry missed & unanswered ("+miss.length+")"),h("button",{class:"btn",onclick:exitStudy},"Back to dashboard")),
+   W.ids.map((id,k)=>{const q=qid(id),a=W.A[id]||{};return q&&h("details",{class:"card"},h("summary",{},(k+1)+". "+(a.done?(a.ok?"✓ ":"✗ "):"– ")+q.prompt),h("p",{},"Your answer: ",h("b",{},a.ans||"(unanswered)")),h("p",{},"Expected: ",h("b",{},exp(q))),expl(q))})))}
+addEventListener("keydown",e=>{if($("#study").hidden||!W||$("#dlg").open)return;
+ const tag=e.target.tagName,typing=tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT",k=e.key;
+ if(k==="Escape"){exitStudy();return}
+ if(W.sum)return;
+ if(k==="Enter"&&(tag==="INPUT"||e.target===document.body)){if(W.mode==="practice"||W.mode==="quiz"){e.preventDefault();act("check")}return}
+ if(k==="PageDown"){e.preventDefault();act("next");return}
+ if(k==="PageUp"){e.preventDefault();act("prev");return}
+ if(typing||e.ctrlKey||e.metaKey||e.altKey)return;
+ const M={ArrowRight:"next",n:"next",ArrowLeft:"prev",p:"prev",h:"hint",s:"show",b:"mark",c:"conf",f:"flip"," ":"flip"};
+ if(k===" "&&e.target!==document.body)return;
+ if(/^[1-9]$/.test(k)){const q=cur();if((W.mode==="quiz"||W.mode==="exam")&&optsOf(q).length>=2){const o=optsOf(q)[+k-1];if(o){e.preventDefault();act("pick",o)}}return}
+ if(M[k]){e.preventDefault();act(M[k])}});
+
+/* ===== 6. VIEWS ===== */
+const VIEWS={};
+function go(v){view=v||view;$("#app").replaceChildren(VIEWS[view]());document.querySelectorAll("nav button").forEach(b=>b.setAttribute("aria-current",b.dataset.v===view?"page":"false"));const t=$("#app h2");if(t)t.tabIndex=-1;status()}
+VIEWS.dash=()=>{const s=stats(),a=S.sessions.active,el=h("div",{}),log=S.sessions.log.filter(x=>x.bank===A().id).slice(0,5),ts=topicStats().filter(x=>x.att).sort((x,y)=>x.acc-y.acc).slice(0,3);
+ el.append(h("h2",{},"Dashboard"),h("p",{class:"mu"},"Active bank: "+A().name+" · "+s.n+" questions"));
+ if(a&&!a.sum&&validW(a))el.append(h("div",{class:"card"},h("strong",{},"Resume: "+a.title),h("p",{class:"mu"},MODES[a.mode]+" · question "+(a.i+1)+" of "+a.ids.length),
+  h("div",{class:"row"},h("button",{class:"btn p",onclick:()=>{S.prefs.bank=a.bank;W=a;openStudy()}},"Resume"),h("button",{class:"btn d",onclick:()=>{S.sessions.active=null;save("sessions");go()}},"Discard"))));
+ el.append(h("div",{class:"grid"},[[s.n,"Questions"],[s.seen,"Attempted"],[s.ok,"Correct attempts"],[s.bad,"Incorrect attempts"],[s.acc,"Accuracy"],[s.mas,"Mastered"],[s.learn,"Learning"],[s.due,"Due for review"],[s.open,"Open in notebook"]].map(([v,l])=>h("div",{class:"card stat"},h("b",{},v),l))));
+ if(!s.att)el.append(h("p",{class:"msg wn"},"No attempts yet. Pick a study mode below to start; statistics appear after your first answer."));
+ const sel=h("select",{id:"src","aria-label":"Question source"},SRC.map(([k,l])=>h("option",{value:k},l+" ("+(k==="r10"?Math.min(10,s.n):FILT[k]().length)+")")));
+ el.append(h("div",{class:"card"},h("h3",{},"Start studying"),h("label",{},"Questions to study",sel),
+  h("div",{class:"row"},Object.keys(MODES).filter(m=>m!=="review").map(m=>h("button",{class:"btn p",onclick:()=>{const k=sel.value;startStudy(m,FILT[k](),MODES[m]+" · "+SRC.find(x=>x[0]===k)[1])}},MODES[m]))),
+  h("p",{class:"mu sm"},"Practice and multiple choice give instant feedback. Exams give 1 minute per question and reveal results at the end. Scheduling: see Settings.")));
+ el.append(h("div",{class:"card"},h("h3",{},"Recent sessions"),log.length?h("div",{class:"tw"},h("table",{},h("tbody",{},log.map(x=>h("tr",{},h("td",{},fmt(x.at)),h("td",{},x.title),h("td",{},x.ok+" / "+x.total)))))):h("p",{class:"mu"},"No finished sessions yet.")));
+ el.append(h("div",{class:"card"},h("h3",{},"Weakest topics"),ts.length?h("ul",{},ts.map(x=>h("li",{},x.topic+": "+Math.round(x.acc*100)+"% over "+x.att+" attempts"))):h("p",{class:"mu"},"Available after you answer some questions.")));
+ const days=[...Array(7)].map((_,k)=>{const d=new Date(Date.now()-(6-k)*day).toDateString();return[d.slice(0,10),S.attempts.filter(x=>x.b===A().id&&new Date(x.at).toDateString()===d).length]}),mx=Math.max(1,...days.map(x=>x[1]));
+ if(S.attempts.length)el.append(h("div",{class:"card"},h("h3",{},"Activity, last 7 days"),days.map(([d,c])=>h("div",{class:"row"},h("span",{style:"width:6.5rem"},d),h("div",{class:"bar"},h("i",{style:"width:"+c/mx*100+"%"})),h("span",{},c)))));
+ const im=S.imports[0];
+ el.append(h("div",{class:"card"},h("h3",{},"Data status"),h("p",{},"Last save: "+fmt(S.meta.saved)+(store?"":" (storage unavailable — temporary session)")),h("p",{},"Last import: "+(im?fmt(im.at)+" — "+im.n+" questions ("+im.name+")":"none yet")),h("p",{},"Last export: "+fmt(S.prefs.lastExport))));
+ return el};
+/* Library */
+const LF={q:"",topic:"",diff:"",sort:"id"},SEL=new Set();
+const statusOf=q=>{const p=peek(q.id);return !p||!num(p.att)?"New":p.state==="mastered"?"Mastered":isDue(q)?"Due":"Learning"};
+function libList(){const s=norm(LF.q),c={id:(a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true}),topic:(a,b)=>a.topic.localeCompare(b.topic),diff:(a,b)=>(a.difficulty||"~").localeCompare(b.difficulty||"~"),prompt:(a,b)=>a.prompt.localeCompare(b.prompt)}[LF.sort];
+ return Q().filter(q=>(!LF.topic||q.topic===LF.topic)&&(!LF.diff||q.difficulty===LF.diff)&&(!s||norm(q.prompt+" "+q.answers.join(" ")+" "+(q.tags||[]).join(" ")).includes(s))).sort(c)}
+VIEWS.lib=()=>{const el=h("div",{}),lt=h("div",{}),b=A(),tops=[...new Set(Q().map(q=>q.topic))].sort(),diffs=[...new Set(Q().map(q=>q.difficulty).filter(Boolean))].sort();
+ const fill=()=>{const l=libList(),rows=l.slice(0,300);lt.replaceChildren(h("div",{class:"row"},h("span",{class:"mu"},l.length+" matching · "+SEL.size+" selected"+(l.length>300?" · showing first 300":"")),
+   h("button",{class:"btn",onclick:()=>{rows.forEach(q=>SEL.add(q.id));fill()}},"Select shown"),h("button",{class:"btn",onclick:()=>{SEL.clear();fill()}},"Clear selection")),
+  l.length?h("div",{class:"tw"},h("table",{},h("thead",{},h("tr",{},["","Question","Topic","Level","Status","Actions"].map(x=>h("th",{},x)))),h("tbody",{},rows.map(q=>h("tr",{},
+   h("td",{},h("input",{type:"checkbox","aria-label":"Select "+q.id,checked:SEL.has(q.id),onchange:e=>e.target.checked?SEL.add(q.id):SEL.delete(q.id)})),h("td",{},q.prompt),h("td",{},q.topic),h("td",{},q.difficulty||"—"),h("td",{},statusOf(q)),
+   h("td",{},h("div",{class:"row"},h("button",{class:"btn","aria-pressed":String(!!S.bookmarks[q.id]),"aria-label":"Bookmark",onclick:()=>{S.bookmarks[q.id]?delete S.bookmarks[q.id]:S.bookmarks[q.id]=1;save("bookmarks");fill()}},"★"),
+    h("button",{class:"btn",onclick:()=>startStudy("practice",[q],"Single question")},"Study"),h("button",{class:"btn",onclick:()=>window.editQ(q)},"Edit"),h("button",{class:"btn",onclick:()=>pngAsk(q,Q().indexOf(q)+1)},"Image"))))))))
+   :h("p",{class:"card"},"No questions match. Clear the search and filters, or import a bank."))};
+ const sel=(k,l,o)=>h("label",{},l,h("select",{onchange:e=>{LF[k]=e.target.value;fill()}},o.map(([v,t])=>h("option",{value:v,selected:LF[k]===v},t))));
+ el.append(h("h2",{},"Question library"),h("div",{class:"card"},  h("label",{},"Active bank",h("select",{onchange:e=>{S.prefs.bank=e.target.value;SEL.clear();save("prefs");go()}},S.banks.map(x=>h("option",{value:x.id,selected:x.id===b.id},x.name+" ("+x.questions.length+")")))),
+  h("button",{class:"btn d",onclick:async()=>{if(S.banks.length<2)return toast("You cannot delete the only bank.");if(await ask("Delete the bank “"+b.name+"” and its "+b.questions.length+" questions? Progress records stay stored but become hidden.",{ok:"Delete bank",danger:true})){S.banks=S.banks.filter(x=>x.id!==b.id);S.prefs.bank=S.banks[0].id;save("banks","prefs");go()}}},"Delete this bank")),
+  h("div",{class:"card grid"},h("label",{},"Search",h("input",{type:"search",value:LF.q,oninput:e=>{LF.q=e.target.value;fill()}})),sel("topic","Topic",[["","All topics"],...tops.map(t=>[t,t])]),sel("diff","Difficulty",[["","Any"],...diffs.map(t=>[t,t])]),sel("sort","Sort by",[["id","ID"],["topic","Topic"],["diff","Difficulty"],["prompt","Question"]])),lt);fill();return el};
+/* Notebook */
+const NF={topic:"",diff:"",age:"",sort:"missed",st:"open"};
+function noteList(){const ms={7:7*day,30:30*day}[NF.age];
+ return Q().filter(q=>{const p=peek(q.id);return p&&p.nb&&(NF.st==="all"||(NF.st==="open")===(p.state!=="mastered"))&&(!NF.topic||q.topic===NF.topic)&&(!NF.diff||q.difficulty===NF.diff)&&(!ms||now()-p.at<=ms)})
+  .sort((a,b)=>{const x=peek(a.id),y=peek(b.id);return NF.sort==="missed"?num(y.bad)-num(x.bad):NF.sort==="stale"?(x.rev||x.at)-(y.rev||y.at):y.at-x.at})}
+function noteCard(q){const p=peek(q.id),hist=S.attempts.filter(a=>a.q===q.id).slice(-10).reverse();
+ return h("article",{class:"card"},h("div",{class:"row"},h("span",{class:"chip"},q.topic),q.difficulty&&h("span",{class:"chip"},q.difficulty),h("span",{class:"chip"+(p.state==="mastered"?"":" wn")},p.state==="mastered"?"Mastered":"Needs review")),
+  h("p",{class:"q"},q.prompt),h("p",{},"Your last answer: ",h("b",{},p.ans||"—")),h("p",{},"Expected: ",h("b",{},exp(q))),
+  h("p",{class:"mu sm"},"Attempts "+num(p.att)+" · incorrect "+num(p.bad)+" · last attempt "+fmt(p.at)+" · confidence "+(CL[p.conf]||"—")+" · first missed "+fmt(p.fm)+" · last reviewed "+fmt(p.rev)),
+  h("details",{},h("summary",{},"Attempt history and explanation"),hist.length?h("div",{class:"tw"},h("table",{},h("tbody",{},hist.map(a=>h("tr",{},h("td",{},fmt(a.at)),h("td",{},a.ok?"✓":"✗"),h("td",{},a.ans),h("td",{},CL[a.c]||"—"),h("td",{},a.m)))))):h("p",{class:"mu"},"No detailed attempt log (migrated from an older version)."),expl(q)),
+  h("div",{class:"row"},h("button",{class:"btn",onclick:()=>startStudy("practice",[q],"Retry")},"Retry"),
+   p.state==="mastered"?h("button",{class:"btn",onclick:()=>{p.state="learning";p.man=0;const r=S.srs[q.id]||(S.srs[q.id]={box:0,due:0});r.box=Math.min(r.box,1);r.due=0;save("progress","srs");go()}},"Reopen for review"):h("button",{class:"btn",onclick:()=>{p.state="mastered";p.man=1;save("progress");go()}},"Mark as mastered"),
+   h("button",{class:"btn d",onclick:async()=>{if(await ask("Remove this entry from the notebook? Your attempt history is kept, and the question returns here if you miss it again.",{ok:"Remove",danger:true})){p.nb=false;save("progress");go()}}},"Remove")))}
+VIEWS.note=()=>{const el=h("div",{}),box=h("div",{}),tops=[...new Set(Q().map(q=>q.topic))].sort(),diffs=[...new Set(Q().map(q=>q.difficulty).filter(Boolean))].sort();
+ const fill=()=>{const l=noteList();box.replaceChildren(h("p",{class:"mu"},l.length+(l.length===1?" entry":" entries")),...(l.length?l.map(noteCard):[h("div",{class:"card"},"Nothing here. Questions you miss are added automatically.")]))};
+ const sel=(k,l,o)=>h("label",{},l,h("select",{onchange:e=>{NF[k]=e.target.value;fill()}},o.map(([v,t])=>h("option",{value:v,selected:NF[k]===v},t))));
+ el.append(h("h2",{},"Incorrect-answer notebook"),h("p",{class:"mu"},"Every missed question is kept with its attempt history. Answering correctly later never erases that history; it only changes the mastery state."),
+  h("div",{class:"row"},h("button",{class:"btn p",onclick:()=>startStudy("review",noteList(),"Notebook review",true)},"Review all"),h("button",{class:"btn",onclick:()=>startStudy("practice",FILT.wrong(),"Retry incorrect")},"Retry incorrect"),h("button",{class:"btn",onclick:()=>startStudy("practice",FILT.new(),"Retry unanswered")},"Retry unanswered"),
+   h("button",{class:"btn d",onclick:async()=>{const n=Object.values(S.progress).filter(p=>p.nb).length;if(!n)return toast("The notebook is already empty.");if(await ask("Clear all "+n+" notebook entries? Attempt history and statistics are kept; entries return when questions are missed again.",{ok:"Clear notebook",danger:true})){Object.values(S.progress).forEach(p=>p.nb=false);save("progress");go()}}},"Clear notebook")),
+  h("div",{class:"card grid"},sel("st","Status",[["open","Needs review"],["mastered","Mastered"],["all","All"]]),sel("topic","Topic",[["","All topics"],...tops.map(t=>[t,t])]),sel("diff","Difficulty",[["","Any"],...diffs.map(t=>[t,t])]),sel("age","Last attempt",[["","Any time"],["7","Last 7 days"],["30","Last 30 days"]]),sel("sort","Sort by",[["missed","Most missed"],["stale","Least recently reviewed"],["recent","Most recent"]])),box);fill();return el};
+/* Import Center */
+let IM=null;
+const EXAMPLE=[{id:"chem-001",question:"What is the chemical symbol for sodium?",answer:"Na",type:"blank",explanation:"Sodium is represented by Na, derived from its Latin name, natrium.",topic:"Chemical symbols",difficulty:"easy",hints:["It is a two-letter symbol."]}];
+async function applyImport(){const r=IM.res,mode=$("#tg").value,b=A();
+ if(mode==="merge"){const p=plan(r.ok,b.questions),m=new Map(p.rep.map(q=>[q.id,q]));b.questions=b.questions.map(q=>m.get(q.id)||q).concat(p.add)}
+ else if(mode==="replace"){if(!await ask("Replace all "+b.questions.length+" questions in “"+b.name+"” with "+r.ok.length+" imported questions? Progress for removed questions stays stored but hidden.",{ok:"Replace bank",danger:true}))return;b.questions=r.ok}
+ else{const nb={id:"bank_"+now().toString(36),name:$("#nm").value.trim()||"Imported "+new Date().toLocaleDateString(),at:now(),questions:r.ok};S.banks.push(nb);S.prefs.bank=nb.id}
+ S.imports.unshift({at:now(),name:IM.name||"pasted JSON",n:r.ok.length,mode});S.imports.length=Math.min(S.imports.length,20);
+ const ok=save("banks","imports","prefs");IM=null;toast(ok?"Import saved to this browser.":"Imported for this session, but saving failed — export a backup.");go("lib")}
+VIEWS.imp=()=>{const el=h("div",{}),pv=h("div",{}),ta=h("textarea",{"aria-label":"Paste question JSON",placeholder:"Paste a JSON array of questions here…",spellcheck:"false"});
+ const run=(text,name)=>{IM=null;pv.replaceChildren();const r=analyze(text);if(r.err){pv.append(h("div",{class:"msg no",role:"alert"},r.err));return}
+  IM={res:r,name};const p=plan(r.ok,Q());
+  pv.append(h("div",{class:"card"},h("h3",{},"Preview"),h("p",{},r.total+" records · "+r.ok.length+" valid · "+r.rej.length+" rejected"),h("p",{},"If merged into “"+A().name+"”: "+p.add.length+" added · "+p.rep.length+" replaced · "+p.skip.length+" skipped"),
+   h("p",{class:"mu"},"Sample questions:"),h("ul",{},r.ok.slice(0,3).map(q=>h("li",{},q.id+": "+q.prompt))),
+   p.skip.length>0&&h("details",{},h("summary",{},"Skipped ("+p.skip.length+")"),h("ul",{},p.skip.slice(0,20).map(x=>h("li",{},x.q.id+" — "+x.why)))),
+   r.rej.length>0&&h("details",{open:true},h("summary",{},"Rejected records ("+r.rej.length+")"),h("ul",{},r.rej.slice(0,30).map(x=>h("li",{},"Record #"+x.n+": "+x.e)))),
+   h("label",{},"Apply as",h("select",{id:"tg"},[["merge","Merge into the current bank"],["new","Add as a new bank"],["replace","Replace the current bank (asks to confirm)"]].map(([v,l])=>h("option",{value:v},l)))),
+   h("label",{},"Name for a new bank",h("input",{id:"nm",type:"text",value:name?name.replace(/\.json$/i,""):""})),
+   h("div",{class:"row"},h("button",{class:"btn p",disabled:!r.ok.length,onclick:applyImport},"Apply import"),h("button",{class:"btn",onclick:()=>{IM=null;pv.replaceChildren();toast("Import cancelled. Nothing was changed.")}},"Cancel"))))};
+ const rd=f=>{if(!f)return;if(f.size>8e6)return toast("That file is larger than 8 MB.");f.text().then(t=>{ta.value=t;run(t,f.name)},()=>toast("The file could not be read."))};
+ const drop=h("label",{class:"drop",ondragover:e=>{e.preventDefault();drop.classList.add("on")},ondragleave:()=>drop.classList.remove("on"),ondrop:e=>{e.preventDefault();drop.classList.remove("on");rd(e.dataTransfer.files[0])}},"Drop a .json file here, or choose one",h("input",{type:"file",accept:".json,application/json",onchange:e=>rd(e.target.files[0])}));
+ const ex=JSON.stringify(EXAMPLE,null,2);
+ el.append(h("h2",{},"Import questions"),h("p",{class:"mu"},"Imported data is validated and treated as plain text. Nothing changes until you press Apply import."),drop,h("label",{},"…or paste JSON",ta),
+  h("div",{class:"row"},h("button",{class:"btn p",onclick:()=>run(ta.value,"")},"Check JSON"),h("button",{class:"btn",onclick:()=>{ta.value=ex;run(ex,"example")}},"Use example")),pv,
+  h("details",{class:"card"},h("summary",{},"JSON format and example"),h("p",{},"An array of objects (or {\"questions\": [...]}). Required: question text (prompt, question or q) and answer (answers, answer or a; a string or list). Optional: id, topic, difficulty, options, hints, tags, references, explanation (or why), whyCorrect, commonMistakes, concept, workedExample, memoryTip (or tip), examTrap. Missing IDs are generated from the question text, so re-importing the same file never duplicates questions."),
+   h("pre",{},ex),h("button",{class:"btn",onclick:()=>{navigator.clipboard?navigator.clipboard.writeText(ex).then(()=>toast("Example copied."),()=>toast("Copy failed.")):toast("Select the text and copy it manually.")}},"Copy example")));return el};
+/* Export Center */
+function qPng(q,i,wa,we){const W0=1000,pad=56,mw=W0-pad*2,c=document.createElement("canvas"),x=c.getContext("2d");if(!x)return toast("This browser cannot draw images.");
+ const bl=[[q.topic+(q.difficulty?" · "+q.difficulty:"")+(i?" · Q"+i:""),"600 24px system-ui,sans-serif","#475569",30],[q.prompt,"700 34px system-ui,sans-serif","#0f172a",44]];
+ if(wa)bl.push(["Answer: "+exp(q),"700 28px system-ui,sans-serif","#166534",38]);
+ if(we)EX.forEach(([k,l])=>q[k]&&bl.push([l+": "+q[k],"400 26px system-ui,sans-serif","#1e293b",36]));
+ const wrap=(t,f)=>{x.font=f;const out=[];for(const para of String(t).split("\n")){let line="";for(const w of para.split(/\s+/)){const t2=line?line+" "+w:w;if(x.measureText(t2).width<=mw){line=t2;continue}
+  if(line)out.push(line);line=w;while(x.measureText(line).width>mw){let k=line.length;while(k>1&&x.measureText(line.slice(0,k)).width>mw)k--;out.push(line.slice(0,k));line=line.slice(k)}}out.push(line)}return out};
+ const L=bl.map(b=>wrap(b[0],b[1])),H=Math.min(9000,pad*2+40+bl.reduce((s,b,j)=>s+L[j].length*b[3]+22,0));
+ c.width=W0;c.height=H;x.fillStyle="#fff";x.fillRect(0,0,W0,H);x.fillStyle="#0f766e";x.fillRect(0,0,W0,10);x.textBaseline="top";
+ let y=pad+10;bl.forEach((b,j)=>{x.font=b[1];x.fillStyle=b[2];L[j].forEach(l=>{x.fillText(l,pad,y);y+=b[3]});y+=22});
+ x.font="400 20px system-ui,sans-serif";x.fillStyle="#64748b";x.fillText("EUEE Mastery",pad,H-pad+6);
+ c.toBlob(b=>b?dl("question-"+safe(q.id)+".png",b):toast("Image export failed in this browser."))}
+function scoped(sc){const qs=Q();return({all:()=>qs,filter:libList,sel:()=>qs.filter(q=>SEL.has(q.id)),wrong:()=>qs.filter(q=>(peek(q.id)||{}).nb),flag:()=>qs.filter(q=>(peek(q.id)||{}).rep)})[sc]()}
+function printSheet(list,title,detail){if(!list.length)return toast("No matching questions to print.");const pr=$("#print");pr.replaceChildren(h("h1",{},title),h("p",{},A().name+" · "+new Date().toLocaleDateString()+" · "+list.length+" questions"),
+ ...list.map((q,k)=>h("div",{class:"pi"},h("p",{},h("b",{},(k+1)+". "+q.prompt)," ("+q.topic+")"),h("p",{},"Answer: "+exp(q)),detail(q))));setTimeout(()=>print(),60)}
+const filePick=(t,cb)=>{const i=h("input",{type:"file",accept:".json,application/json",hidden:true,onchange:e=>{cb(e.target.files[0]);e.target.value=""}});return h("span",{},h("button",{class:"btn",onclick:()=>i.click()},t),i)};
+function backup(){const d={};for(const k in DEF)if(k!=="meta")d[k]=S[k];d.sessions={...S.sessions,active:null};dl("EUEE-Mastery-backup-"+stamp()+".json",JSON.stringify({app:"cml",v:4,at:now(),data:d}));toast("Backup downloaded.")}
+async function restore(f){if(!f)return;let o;try{o=JSON.parse(await f.text())}catch(e){return toast("Backup is not valid JSON: "+e.message)}
+ if(!o||o.app!=="cml"||kind(o.data)!=="o")return toast("This file is not an EUEE Mastery-compatible backup.");
+ if(o.v>4)return toast("This backup comes from a newer version (v"+o.v+") and cannot be restored safely.");
+ const bad=Object.keys(DEF).filter(k=>k!=="meta"&&o.data[k]!=null&&kind(o.data[k])!==kind(DEF[k]));if(bad.length)return toast("Backup is damaged. Invalid sections: "+bad.join(", "));
+ if(!await ask("Restore the backup from "+fmt(o.at)+"? It has "+(o.data.banks||[]).length+" bank(s) and progress for "+Object.keys(o.data.progress||{}).length+" question(s). This REPLACES all data on this device.",{ok:"Restore",danger:true}))return;
+ for(const k in DEF)if(k!=="meta"&&o.data[k]!=null)S[k]=o.data[k];
+ S.prefs={...DEF.prefs,...S.prefs};S.sessions={...DEF.sessions,...S.sessions,active:null};if(!Array.isArray(S.sessions.log))S.sessions.log=[];cleanBanks();if(!S.banks.length)S.banks=[sampleBank()];if(!S.banks.some(b=>b.id===S.prefs.bank))S.prefs.bank=S.banks[0].id;
+ W=null;applyPrefs();toast(save()?"Backup restored.":"Restored for this session, but saving failed.");go("dash")}
+VIEWS.exp=()=>{const el=h("div",{}),sc=h("select",{"aria-label":"Export scope"},[["all","All questions in this bank"],["filter","Current Library search and filters"],["sel","Questions selected in Library"],["wrong","Incorrect-answer notebook"],["flag","Questions flagged for review"]].map(([v,l])=>h("option",{value:v},l)));
+ const ip=h("input",{type:"checkbox",checked:true}),pick=h("select",{"aria-label":"Question for image"},Q().slice(0,500).map((q,k)=>h("option",{value:q.id},(k+1)+". "+q.prompt.slice(0,60)))),pa=h("input",{type:"checkbox",checked:true}),pe=h("input",{type:"checkbox"});
+ const bt=(t,f,c)=>h("button",{class:"btn "+(c||""),onclick:()=>{const l=scoped(sc.value);if(!l.length)return toast("Nothing to export for this scope.");f(l)}},t);
+ const prog=l=>{const o={};l.forEach(q=>{const p=peek(q.id);if(p)o[q.id]={progress:p,schedule:S.srs[q.id]||null,bookmarked:!!S.bookmarks[q.id]}});return o};
+ el.append(h("h2",{},"Export center"),h("div",{class:"card"},h("p",{class:"mu"},"Bank: "+A().name+". Every export below uses the scope chosen here."),h("label",{},"Scope",sc),h("label",{},ip,"Include my learning progress in JSON"),
+  h("div",{class:"row"},
+   bt("JSON",l=>dl("questions-"+safe(A().name)+".json",JSON.stringify({app:"cml",v:4,kind:"questions",bank:A().name,at:now(),questions:l,...(ip.checked?{learning:prog(l)}:{})},null,2))),
+   bt("CSV (questions + attempt summary)",l=>dl("questions.csv","\uFEFF"+toCSV([["id","topic","difficulty","question","answers","explanation","tags","attempts","correct","incorrect","status","last_answer","last_attempt","confidence","next_due"],...l.map(q=>{const p=peek(q.id)||{},r=S.srs[q.id];return[q.id,q.topic,q.difficulty,q.prompt,q.answers.join(" | "),q.explanation||"",(q.tags||[]).join("; "),num(p.att),num(p.ok),num(p.bad),statusOf(q),p.ans||"",p.at?new Date(p.at).toISOString():"",CL[p.conf]||"",r?new Date(r.due).toISOString():""]})]),"text/csv")),
+   bt("Text revision sheet",l=>dl("revision-sheet.txt",l.map((q,k)=>(k+1)+". "+q.prompt+"\n   Answer: "+exp(q)+(q.explanation?"\n   Why: "+q.explanation:"")+(q.memoryTip?"\n   Tip: "+q.memoryTip:"")).join("\n\n"),"text/plain")),
+   bt("Print study sheet",l=>printSheet(l,"Study sheet",q=>q.explanation?h("p",{},"Why: "+q.explanation):null)),
+   bt("Print incorrect-question report",l=>printSheet(l.filter(q=>(peek(q.id)||{}).nb),"Incorrect-question report",q=>{const p=peek(q.id);return h("p",{},"Your last answer: "+(p.ans||"—")+" · missed "+num(p.bad)+" of "+num(p.att)+" attempts"+(q.explanation?" · Why: "+q.explanation:""))}))),
+  h("p",{class:"mu sm"},"PDF: this app does not bundle a PDF generator. The two Print buttons open your browser’s print dialog; choose “Save as PDF” there to get a PDF file.")),
+  h("div",{class:"card"},h("h3",{},"Question image (PNG)"),h("label",{},"Question",pick),h("label",{},pa,"Include the answer"),h("label",{},pe,"Include the explanation"),
+   h("button",{class:"btn p",onclick:()=>{const q=qid(pick.value);if(q)qPng(q,Q().indexOf(q)+1,pa.checked,pe.checked)}},"Download PNG")),
+  h("div",{class:"card"},h("h3",{},"Full backup"),h("p",{class:"mu"},"All banks, progress, notebook, schedules, sessions, exams and preferences in one restorable file."),
+   h("div",{class:"row"},h("button",{class:"btn p",onclick:backup},"Download backup"),filePick("Restore from backup…",restore))));return el};
+/* Settings, diagnostics */
+function selfTest(){const r=[],t=(n,f)=>{try{const v=f();r.push([n,v===true,v===true?"":String(v)])}catch(e){r.push([n,false,String(e&&e.message||e)])}};
+ t("Browser storage available",()=>!!probe()||"localStorage unavailable (temporary session)");
+ t("Last save succeeded",()=>(!!store&&!saveErr)||"Save problem: "+(saveErr||"no storage"));
+ t("Storage round-trip",()=>{if(!store)return"no storage";store.setItem("cml4.selftest",'{"a":1}');const ok=JSON.parse(store.getItem("cml4.selftest")).a===1;store.removeItem("cml4.selftest");return ok});
+ t("Rejects malformed JSON",()=>!!analyze("{bad").err);
+ t("Rejects a record without an answer",()=>analyze('[{"question":"x"}]').rej.length===1);
+ t("Accepts q / a / why variants",()=>{const x=analyze('[{"q":"2+2?","a":"4","why":"sum"}]');return !!x.ok&&x.ok[0].prompt==="2+2?"&&x.ok[0].explanation==="sum"});
+ t("Generated IDs are stable",()=>analyze('[{"q":"Z","a":"1"}]').ok[0].id===analyze('[{"q":"Z","a":"1"}]').ok[0].id);
+ t("Duplicate detection",()=>plan([nq({id:"zzz",prompt:Q()[0].prompt,answers:["x"]})],Q()).skip.length===1);
+ t("Question IDs unique and complete",()=>{const ids=Q().map(q=>q.id);return(new Set(ids).size===ids.length&&Q().every(q=>q.answers.length&&q.prompt))||"duplicate IDs or incomplete records"});
+ t("Multiple-choice options valid",()=>Q().every(q=>{const o=buildOpts(q,Q());return o.length>=2&&new Set(o.map(norm)).size===o.length&&o.some(x=>okOf(q,x))})||"some question cannot form 2+ distinct options including a correct one");
+ t("Scheduler: wrong resets, correct advances",()=>srsNext(null,true,3,1e12).box===1&&srsNext({box:3,due:0},false,3,1e12).box===0);
+ t("CSV escaping",()=>toCSV([['a,"b"',"c\nd"]])==='"a,""b""","c\nd"');
+ t("Imported text stays text",()=>h("p",{},"<img src=x onerror=alert(1)>").children.length===0);
+ t("Export ready: Blob + object URL",()=>typeof Blob==="function"&&typeof URL.createObjectURL==="function");
+ t("Export ready: canvas for PNG",()=>!!document.createElement("canvas").getContext("2d")||"no 2D canvas");
+ t("Print available",()=>typeof print==="function");return r}
+VIEWS.set=()=>{const el=h("div",{}),out=h("div",{});
+ const reset=(all)=>async()=>{if(!await ask(all?"Delete EVERYTHING on this device, including imported banks, and restore the 10 sample questions? Download a backup first if unsure.":"Reset all progress (answers, notebook, schedules, bookmarks, sessions, exams)? Your question banks are kept.",{ok:all?"Delete everything":"Reset progress",danger:true}))return;
+  const keep=all?{}:{banks:S.banks,imports:S.imports,prefs:S.prefs};S=Object.fromEntries(Object.keys(DEF).map(k=>[k,keep[k]||clone(DEF[k])]));W=null;if(all){S.banks=[sampleBank()];S.prefs=clone(DEF.prefs)}S.prefs.bank=S.banks.some(b=>b.id===S.prefs.bank)?S.prefs.bank:S.banks[0].id;applyPrefs();save();toast("Done.");go()};
+ el.append(h("h2",{},"Settings and data"),
+  h("div",{class:"card"},h("h3",{},"Appearance"),h("label",{},"Theme",h("select",{onchange:e=>{S.prefs.theme=e.target.value;applyPrefs();save("prefs")}},[["light","Light"],["dark","Dark"],["auto","Match system"]].map(([v,l])=>h("option",{value:v,selected:S.prefs.theme===v},l)))),
+   h("label",{},"Text size",h("input",{type:"range",min:14,max:24,value:S.prefs.fs,oninput:e=>{S.prefs.fs=+e.target.value;applyPrefs()},onchange:()=>save("prefs")}))),
+  h("div",{class:"card"},h("h3",{},"Where your progress lives"),h("p",{},"Status: "+(store?(saveErr?"save problem — "+saveErr:"saving to this browser"):"storage unavailable — temporary session")+". Last save: "+fmt(S.meta.saved)),
+   h("p",{class:"mu"},"Progress is kept in this browser’s localStorage for this file’s address. It is not permanent and not shared between browsers or devices. Clearing site data, private browsing, moving or renaming the file, or opening it from a different location can make it disappear. Download a backup regularly."),
+   h("div",{class:"row"},h("button",{class:"btn p",onclick:backup},"Download backup"),filePick("Restore from backup…",restore),
+    h("button",{class:"btn d",onclick:reset(false)},"Reset progress"),h("button",{class:"btn d",onclick:reset(true)},"Delete everything"))),
+  h("div",{class:"card"},h("h3",{},"How scheduling and mastery work"),h("p",{},"Each question sits in a box from 0 to 5. A wrong answer sends it to box 0 (review in about 10 minutes). A correct answer with confidence “Fairly sure” or “Sure”, given when the question is due, moves it up one box; later reviews come after 1, 3, 7, 14 and 30 days. Unsure answers and extra practice before the due date do not advance it. A question counts as mastered only from box 4 upward with at least three correct answers and a confident, correct latest answer. A wrong answer reopens it. Correctness and confidence are stored separately. Unrated confidence counts as “Fairly sure”."),
+   h("p",{},"“Show answer” in Practice and Multiple choice counts as a missed attempt. Time limit in exams: one minute per question.")),
+  h("div",{class:"card"},h("h3",{},"Keyboard shortcuts (study workspace)"),h("p",{},"← / p or → / n (or PageUp / PageDown, which also work while typing): previous or next · Enter: check answer · h: hint · s: show answer or explanation · b: bookmark · c: cycle confidence · f or Space: flip card or reveal · 1–9: choose a multiple-choice option · Esc: exit to the dashboard (progress is saved).")),
+  h("div",{class:"card"},h("h3",{},"Diagnostics"),h("button",{class:"btn",onclick:()=>{const r=selfTest();out.replaceChildren(h("p",{},r.filter(x=>x[1]).length+" of "+r.length+" checks passed."),h("ul",{},r.map(([n,ok,m])=>h("li",{},(ok?"✓ ":"✗ ")+n+(m?" — "+m:"")))))}},"Run self-test"),out));return el};
+
+/* ===== 7. START ===== */
+function boot(){const warn=load();applyPrefs();status();
+ $("nav").onclick=e=>{const b=e.target.closest("button[data-v]");if(b){go(b.dataset.v);const t=$("#app h2");if(t)t.focus()}};
+ $("#th").onclick=()=>{S.prefs.theme=document.documentElement.dataset.t==="dark"?"light":"dark";applyPrefs();save("prefs")};
+ $("#fm").onclick=()=>{S.prefs.fs=Math.max(14,S.prefs.fs-1);applyPrefs();save("prefs")};$("#fp").onclick=()=>{S.prefs.fs=Math.min(24,S.prefs.fs+1);applyPrefs();save("prefs")};
+ const a=S.sessions.active;if(a){if(!a.sum&&validW(a)){W=a;S.prefs.bank=a.bank}else S.sessions.active=null}
+ go("dash");if(!store)$("#warn").hidden=false;
+ if(warn.length)toast("Some saved data was unreadable and was set aside: "+warn.join(", "));
+ save();if(W&&W.open)openStudy()}
+addEventListener("error",e=>toast("Unexpected error: "+e.message));
+boot();
+</script>
+<script>
+/* ===== UPGRADE PACK (runs after the core app; reads its globals) ===== */
+(()=>{
+const dk=d=>new Date(d).toDateString();
+const ACC={Blue:["#007aff","#e5f1ff","#0a84ff","#14304f","#fff","#fff"],Purple:["#af52de","#f3e5fb","#bf5af2","#35204a","#fff","#fff"],Pink:["#ff2d55","#ffe5ea","#ff375f","#4a1b26","#fff","#fff"],Orange:["#ff9500","#fff1dc","#ff9f0a","#47300f","#1c1000","#1c1000"],Green:["#248a3d","#e3f6e8","#30d158","#173a22","#fff","#04210d"],Graphite:["#6e6e73","#ececf0","#98989d","#38383c","#fff","#111"]};
+function accent(){const c=ACC[S.prefs.accent]||ACC.Blue;let e=$("#acx");if(!e){e=document.createElement("style");e.id="acx";document.head.append(e)}
+ e.textContent=":root{--ac:"+c[0]+";--acs:"+c[1]+";--on:"+c[4]+"}[data-t=dark]{--ac:"+c[2]+";--acs:"+c[3]+";--on:"+c[5]+"}"}
+const att=()=>S.attempts.filter(x=>x.b===A().id);
+function streak(){const s=new Set(S.attempts.map(x=>dk(x.at)));let n=0,d=Date.now();if(!s.has(dk(d)))d-=day;while(s.has(dk(d))){n++;d-=day}return n}
+const today=()=>S.attempts.filter(x=>dk(x.at)===dk(now())).length;
+const xp=()=>S.attempts.reduce((t,x)=>t+(x.ok?10:2),0)+Object.values(S.progress).filter(p=>p.state==="mastered").length*50;
+/* extra question sources */
+FILT.smart=()=>{const seen=new Set(),out=[];for(const q of [...FILT.due(),...FILT.wrong(),...FILT.weak(),...FILT.new()])if(!seen.has(q.id)&&out.length<15){seen.add(q.id);out.push(q)}return out};
+FILT.leech=()=>Q().filter(q=>{const p=peek(q.id);return p&&num(p.bad)>=3&&p.state!=="mastered"});
+SRC.unshift(["smart","Smart mix (due, weak, new)"]);SRC.push(["leech","Leeches (missed 3+ times)"]);
+/* progress ring */
+function ring(pct,txt,sub){const r=52,c=2*Math.PI*r,s=document.createElementNS("http://www.w3.org/2000/svg","svg");s.setAttribute("viewBox","0 0 120 120");s.setAttribute("class","ring");s.setAttribute("role","img");s.setAttribute("aria-label",txt+" "+sub);
+ s.innerHTML='<circle cx="60" cy="60" r="'+r+'" fill="none" stroke="var(--ln)" stroke-width="10"/><circle class="rg" cx="60" cy="60" r="'+r+'" fill="none" stroke="var(--ac)" stroke-width="10" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+c+'" transform="rotate(-90 60 60)"/><text x="60" y="63" text-anchor="middle" font-size="26" font-weight="700" fill="var(--ink)" font-family="var(--fd)">'+txt+'</text><text x="60" y="81" text-anchor="middle" font-size="10" fill="var(--mu)">'+sub+'</text>';
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{const g=s.querySelector(".rg");if(g)g.style.strokeDashoffset=c*(1-pct)}));return s}
+function hero(){const s=stats(),xv=xp(),lv=1+Math.floor(Math.sqrt(xv/40)),lo=40*(lv-1)**2,hi=40*lv*lv,g=+S.prefs.goal||20,t=today(),ex=S.prefs.exd?Math.ceil((new Date(S.prefs.exd+"T00:00")-now())/day):null,left=s.n-s.mas;
+ const bar=(v,m)=>h("div",{class:"bar"},h("i",{style:"width:"+Math.max(0,Math.min(100,v/m*100))+"%"}));
+ return h("section",{class:"card hero"},ring(s.n?s.mas/s.n:0,(s.n?Math.round(s.mas/s.n*100):0)+"%","mastered"),
+  h("div",{class:"hx"},h("h2",{},t>=g?"Daily goal reached":(g-t)+" questions to today’s goal"),
+   h("div",{class:"row"},h("span",{class:"pill"},"🔥 "+streak()+"-day streak"),h("span",{class:"pill"},"⭐ Level "+lv),h("span",{class:"pill"},s.due+" due now"),ex!=null&&h("span",{class:"pill"},ex>0?"📅 "+ex+" days to exam":"📅 Exam date passed")),
+   h("div",{class:"row"},h("span",{class:"sm"},"Today "+t+" / "+g),bar(t,g)),
+   h("div",{class:"row"},h("span",{class:"sm"},"XP "+xv+" / "+hi),bar(xv-lo,hi-lo)),
+   ex>0&&h("p",{class:"sm mu"},left?left+" questions left to master: about "+Math.ceil(left/ex)+" per day to finish by exam day.":"Everything is mastered. Keep reviewing to retain it."),
+   h("div",{class:"row"},h("button",{class:"btn p",onclick:()=>startStudy("practice",FILT.smart(),"Smart session",true)},"Start smart session"),h("button",{class:"btn",onclick:()=>startStudy("flash",FILT.due(),"Due flashcards")},"Review due cards"))))}
+function topics(){const m={};Q().forEach(q=>{const p=peek(q.id),x=m[q.topic]||(m[q.topic]={n:0,m:0,a:0,o:0});x.n++;if(p){x.a+=num(p.att);x.o+=num(p.ok);if(p.state==="mastered")x.m++}});
+ return h("div",{class:"card"},h("h3",{},"Topic mastery"),Object.entries(m).sort((a,b)=>a[1].m/a[1].n-b[1].m/b[1].n).map(([t,x])=>h("div",{class:"tp"},h("div",{class:"row"},h("b",{style:"flex:1"},t),h("span",{class:"sm mu"},x.m+"/"+x.n+" mastered · "+(x.a?Math.round(x.o/x.a*100)+"% accuracy":"not started")),h("button",{class:"btn",onclick:()=>startStudy("practice",Q().filter(q=>q.topic===t),t)},"Drill")),h("div",{class:"bar"},h("i",{style:"width:"+x.m/x.n*100+"%"})))))}
+function chart(){const d=[...Array(14)].map((_,k)=>{const t=now()-(13-k)*day,a=att().filter(x=>dk(x.at)===dk(t));return{l:new Date(t).getDate(),n:a.length,o:a.filter(x=>x.ok).length}}),mx=Math.max(1,...d.map(x=>x.n));
+ return h("div",{class:"card"},h("h3",{},"Activity and accuracy, 14 days"),h("div",{class:"cols",role:"img","aria-label":"Answers per day over the last 14 days"},d.map(x=>h("div",{class:"col",title:x.n+" answered, "+x.o+" correct"},h("i",{style:"height:"+x.n/mx*100+"%"},h("u",{style:"height:"+(x.n?x.o/x.n*100:0)+"%"})),h("span",{},x.l)))),h("p",{class:"sm mu"},"Bar height is answers per day; the solid part is the correct share."))}
+function fcast(){const c=Array(7).fill(0),ids=new Set(Q().map(q=>q.id));for(const id in S.srs){if(!ids.has(id))continue;const k=Math.max(0,Math.floor((S.srs[id].due-now())/day));if(k<7)c[k]++}
+ const mx=Math.max(1,...c);return h("div",{class:"card"},h("h3",{},"Review forecast, next 7 days"),h("div",{class:"cols",role:"img","aria-label":"Questions due per day"},c.map((n,k)=>h("div",{class:"col"},h("i",{style:"height:"+n/mx*100+"%"},n?h("b",{},n):null),h("span",{},k?"+"+k+"d":"now")))))}
+function badges(){const s=stats(),st=streak(),b=[["First steps","Answer 1 question",s.att>=1],["Warm-up","Give 50 answers",s.att>=50],["Centurion","Give 200 answers",s.att>=200],["Week streak","Study 7 days in a row",st>=7],["Locked in","Study 14 days in a row",st>=14],["Mastery 10","Master 10 questions",s.mas>=10],["Mastery 50","Master 50 questions",s.mas>=50],["Exam ace","Score 90%+ in an exam",S.exams.some(e=>e.total&&e.ok/e.total>=.9)],["Precision","90%+ accuracy over 50 answers",s.att>=50&&s.ok/s.att>=.9]];
+ return h("div",{class:"card"},h("h3",{},"Achievements ("+b.filter(x=>x[2]).length+" of "+b.length+")"),h("div",{class:"row"},b.map(([n,d,y])=>h("span",{class:"badge"+(y?" on":""),title:d},(y?"🏅 ":"🔒 ")+n))))}
+const oD=VIEWS.dash;
+VIEWS.dash=()=>{const el=oD(),old=[...el.querySelectorAll("h3")].find(x=>x.textContent.startsWith("Activity, last"));if(old)old.parentElement.remove();
+ el.children[1].after(hero());el.append(topics(),chart(),fcast(),badges());return el};
+/* settings additions */
+const oS=VIEWS.set;
+VIEWS.set=()=>{const el=oS(),sv=()=>{save("prefs");accent()},nf=(k,l,min,max,ph)=>h("label",{},l,h("input",{type:"number",min,max,value:S.prefs[k]||"",placeholder:ph,onchange:e=>{S.prefs[k]=+e.target.value||0;sv()}}));
+ el.children[1].after(h("div",{class:"card"},h("h3",{},"Goals and feel"),
+  h("div",{class:"row",role:"group","aria-label":"Accent colour"},h("span",{},"Accent"),Object.keys(ACC).map(n=>h("button",{class:"btn sw","aria-pressed":String((S.prefs.accent||"Blue")===n),style:"--c:"+ACC[n][0],onclick:()=>{S.prefs.accent=n;sv();go()}},n))),
+  nf("goal","Daily goal (questions)",1,500,"20"),h("label",{},"Exam date",h("input",{type:"date",value:S.prefs.exd||"",onchange:e=>{S.prefs.exd=e.target.value;sv()}})),
+  nf("exs","Seconds per exam question",20,300,"60"),
+  h("label",{},h("input",{type:"checkbox",checked:!!S.prefs.snd,onchange:e=>{S.prefs.snd=e.target.checked;sv()}}),"Sound feedback")));return el};
+/* sound, confetti, focus timer */
+let ac;const beep=ok=>{if(!S.prefs.snd)return;try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=ok?660:220;g.gain.value=.06;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+(ok?.12:.22))}catch(e){}};
+const oR=record;record=function(q,ok,...r){oR(q,ok,...r);if(!defer)beep(ok)};
+function confetti(){if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;const c=h("canvas",{style:"position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60","aria-hidden":"true"});document.body.append(c);c.width=innerWidth;c.height=innerHeight;
+ const x=c.getContext("2d"),cs=["#0f766e","#f59e0b","#e11d48","#4f46e5","#22c55e"],p=[...Array(110)].map(()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,v:2+Math.random()*4,s:4+Math.random()*6,r:Math.random()*6,c:cs[Math.random()*5|0]}));let t=0;
+ (function f(){x.clearRect(0,0,c.width,c.height);p.forEach(q=>{q.y+=q.v;q.r+=.1;x.fillStyle=q.c;x.save();x.translate(q.x,q.y);x.rotate(q.r);x.fillRect(-q.s/2,-q.s/2,q.s,q.s*.6);x.restore()});if(++t<150)requestAnimationFrame(f);else c.remove()})()}
+const oM=drawSum;drawSum=function(el){oM(el);const s=W.sum;if(s&&s.total&&s.ok/s.total>=.8&&!s.cf){s.cf=1;confetti()}};
+let pt=0,pl=1500,pr=0;const pb=h("button",{class:"btn",id:"pom",title:"Focus timer: click to start or pause, double-click to reset","aria-label":"Focus timer, 25 minutes"},"🍅 25:00"),pd=()=>pb.textContent=(pr?"⏸ ":"🍅 ")+fmtT(pl);
+pb.onclick=()=>{if(pr){clearInterval(pt);pr=0}else{pr=1;pt=setInterval(()=>{if(--pl<=0){clearInterval(pt);pr=0;pl=1500;toast("Focus block complete. Take a 5-minute break.");beep(1)}pd()},1000)}pd()};
+pb.ondblclick=()=>{clearInterval(pt);pr=0;pl=1500;pd()};$("#th").before(pb);
+accent();go();
+})();
+</script>
+<script>
+/* ===== macOS PACK + FEATURE PACK 2 ===== */
+(()=>{
+const dk=d=>new Date(d).toDateString(),L=v=>(v||[]).join("\n"),DX=[["concept","Concept gap"],["careless","Careless slip"],["calc","Calculation"],["misread","Misread"],["guess","Guess"]];
+const NAV=[["Study",[["dash","🏠","Dashboard"],["lib","📚","Library"],["note","📓","Notebook"],["exam","📝","Mock exam and sprint"],["plan","🗓","Daily plan"]]],["Analyse",[["ins","📊","Insights"],["tools","🧪","Chemistry tools"]]],["Content",[["gen","✨","Question studio"],["imp","⬇️","Import"],["exp","⬆️","Export"]]],["App",[["set","⚙️","Settings"]]]];
+const bs=h("select",{"aria-label":"Active bank",onchange:e=>{S.prefs.bank=e.target.value;save("prefs");go()}}),bk=()=>bs.replaceChildren(...S.banks.map(b=>h("option",{value:b.id,selected:b.id===S.prefs.bank},b.name)));
+const oGo=go;go=function(v){oGo(v);bk()};
+/* ---- shell ---- */
+function shell(){const hd=$("header"),nv=$("nav"),mn=h("div",{id:"mn"});mn.append($("#warn"),$("#app"));document.body.insertBefore(mn,$("#study"));document.body.insertBefore(nv,mn);
+ nv.replaceChildren(...NAV.flatMap(([g,it])=>[h("small",{},g),...it.map(([v,i,l])=>h("button",{class:"btn","data-v":v},h("span",{"aria-hidden":"true"},i),l))]),h("label",{class:"bk"},"Subject / bank",bs));
+ nv.addEventListener("click",()=>document.body.classList.remove("sb"));
+ hd.prepend(h("button",{class:"btn bg","aria-label":"Menu",onclick:()=>document.body.classList.toggle("sb")},"☰"),h("div",{class:"tl"},h("button",{class:"r","aria-label":"Back to dashboard",onclick:()=>go("dash")}),h("button",{class:"y","aria-label":"Show or hide sidebar",onclick:()=>document.body.classList.toggle("nosb")}),h("button",{class:"g","aria-label":"Toggle full screen",onclick:fsToggle})));
+ $("#th").textContent="◐";
+ if(S.prefs.fsAuto!==false&&document.fullscreenEnabled){const f=()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{})};addEventListener("pointerdown",f,{once:true})}}
+/* ---- scheduler: ease-based intervals, daily new cap, backlog control ---- */
+const oSN=srsNext;srsNext=function(r,ok,conf,t){t=t||now();const was=r?r.due:0;r=oSN(r,ok,conf,t);let e=r.ease||2.5;e=ok?Math.min(3.2,e+(conf>=3?.1:conf<2?-.1:0)):Math.max(1.3,e-.25);r.ease=e;if(ok&&was<=t&&r.box>=2)r.due=t+INT[r.box]*day*(e/2.5);return r};
+const newToday=()=>{const f={};S.attempts.forEach(x=>{if(!(x.q in f))f[x.q]=x.at});return Object.values(f).filter(a=>dk(a)===dk(now())).length};
+FILT.smart=()=>{const cap=S.prefs.ncap==null?10:S.prefs.ncap,room=Math.max(0,cap-newToday()),due=FILT.due().sort((a,b)=>S.srs[a.id].due-S.srs[b.id].due),big=due.length>40,seen=new Set(),out=[];
+ for(const q of [...due,...(big?[]:[...FILT.wrong(),...FILT.weak()]),...(big?[]:shuffle(FILT.new()).slice(0,room))])if(!seen.has(q.id)&&out.length<(big?25:15)){seen.add(q.id);out.push(q)}
+ return out.length?out:shuffle(FILT.new()).slice(0,5)};
+window.__dt=()=>{if(defer)return 0;try{const a=AA();return a&&a.t0?Math.min(600,Math.round((now()-a.t0)/1000)):0}catch(e){return 0}};
+/* ---- study workspace: images, notation keys, tools, diagnosis, sprint ---- */
+const oDS=drawStudy;
+drawStudy=function(){if(!W.sum){const a0=AA();if(!a0.t0&&!a0.done)a0.t0=now()}
+ oDS();if(W.sum)return;const q=cur(),a=AA(),b=$("#study .bd"),top=$("#study .top"),ex=W.mode==="exam";
+ if(q.img&&/^(data:image\/|https:)/.test(q.img)){const qe=b.querySelector(".q");if(qe)qe.after(h("img",{src:q.img,alt:"Question diagram",style:"max-width:100%;max-height:18rem;border-radius:.7rem;display:block;margin:.5rem 0"}))}
+ const ai=$("#ans");if(ai&&!ai.disabled)ai.closest("label").after(h("div",{class:"row","aria-label":"Notation keys"},["₂","₃","₄","⁺","⁻","²","³","→","⇌","°","·","Δ","↑","↓"].map(c=>h("button",{class:"btn k",type:"button",onmousedown:e=>e.preventDefault(),onclick:()=>{const s=ai.selectionStart??ai.value.length;ai.setRangeText(c,s,ai.selectionEnd??s,"end");ai.dispatchEvent(new Event("input"));ai.focus()}},c))));
+ top.append(ex?h("span",{class:"chip"},"Tools locked in exams"):h("button",{class:"btn",onclick:()=>tools()},"🧪 Tools"));
+ if(W.end&&W.mode==="quiz"&&!$("#tm"))top.append(h("span",{class:"chip",id:"tm"},fmtT(Math.max(0,Math.round((W.end-now())/1000)))));
+ if(a.done&&!a.ok&&!ex&&W.mode==="practice"||a.done&&!a.ok&&W.mode==="quiz"&&!W.sprint)b.append(h("div",{class:"card"},h("b",{},"Why did you miss it?"),h("div",{class:"row"},DX.map(([k,l])=>h("button",{class:"btn","aria-pressed":String(a.dx===k),onclick:()=>{a.dx=k;const t=[...S.attempts].reverse().find(x=>x.q===q.id);if(t){t.d=k;save("attempts")}saveW();drawStudy()}},l)))));
+ if(W.sprint&&a.done&&!a._n){a._n=1;setTimeout(()=>{if(W&&!W.sum&&cur()===q)act("next")},650)}};
+/* ---- chemistry tools ---- */
+const EL="H,Hydrogen,1.008;He,Helium,4.0026;Li,Lithium,6.94;Be,Beryllium,9.0122;B,Boron,10.81;C,Carbon,12.011;N,Nitrogen,14.007;O,Oxygen,15.999;F,Fluorine,18.998;Ne,Neon,20.18;Na,Sodium,22.99;Mg,Magnesium,24.305;Al,Aluminium,26.982;Si,Silicon,28.085;P,Phosphorus,30.974;S,Sulphur,32.06;Cl,Chlorine,35.45;Ar,Argon,39.948;K,Potassium,39.098;Ca,Calcium,40.078;Sc,Scandium,44.956;Ti,Titanium,47.867;V,Vanadium,50.942;Cr,Chromium,51.996;Mn,Manganese,54.938;Fe,Iron,55.845;Co,Cobalt,58.933;Ni,Nickel,58.693;Cu,Copper,63.546;Zn,Zinc,65.38;Ga,Gallium,69.723;Ge,Germanium,72.63;As,Arsenic,74.922;Se,Selenium,78.971;Br,Bromine,79.904;Kr,Krypton,83.798;Ag,Silver,107.87,47;Sn,Tin,118.71,50;I,Iodine,126.9,53;Xe,Xenon,131.29,54;Ba,Barium,137.33,56;Pt,Platinum,195.08,78;Au,Gold,196.97,79;Hg,Mercury,200.59,80;Pb,Lead,207.2,82;U,Uranium,238.03,92".split(";").map(s=>s.split(",")),M=Object.fromEntries(EL.map(e=>[e[0],+e[2]]));
+function mm(f){const comp={};for(const p of f.replace(/\s/g,"").normalize("NFKC").split(/[·.*]/)){const m0=/^(\d+)/.exec(p),k0=m0?+m0[1]:1,s=m0?p.slice(m0[1].length):p,st=[{}];let i=0;
+ while(i<s.length){const c=s[i];
+  if(c==="("||c==="["){st.push({});i++}
+  else if(c===")"||c==="]"){i++;let d="";while(/\d/.test(s[i]||""))d+=s[i++];if(st.length<2)throw "Unbalanced brackets";const t=st.pop(),top=st[st.length-1];for(const e in t)top[e]=(top[e]||0)+t[e]*(+d||1)}
+  else{const m=/^[A-Z][a-z]?/.exec(s.slice(i));if(!m)throw "Unexpected “"+c+"”";i+=m[0].length;let d="";while(/\d/.test(s[i]||""))d+=s[i++];if(!(m[0] in M))throw "Unknown element "+m[0];st[st.length-1][m[0]]=(st[st.length-1][m[0]]||0)+(+d||1)}}
+ if(st.length!==1)throw "Unbalanced brackets";for(const e in st[0])comp[e]=(comp[e]||0)+st[0][e]*k0}
+ if(!Object.keys(comp).length)throw "Enter a formula";let tot=0;for(const e in comp)tot+=comp[e]*M[e];return{tot,comp}}
+function toolsNode(){const out=h("div",{}),nk=e=>{if(e.key==="Enter")e.preventDefault()},inp=h("input",{type:"text",placeholder:"e.g. Ca(OH)2 or CuSO4·5H2O",autocomplete:"off",onkeydown:nk}),sr=h("input",{type:"search",placeholder:"Search by symbol or name",onkeydown:nk}),tb=h("div",{class:"tw",style:"max-height:16rem"});
+ inp.oninput=()=>{try{if(!inp.value.trim())return out.replaceChildren();const r=mm(inp.value);out.replaceChildren(h("p",{},h("b",{},"Molar mass: "+r.tot.toFixed(2)+" g/mol")),h("div",{class:"tw"},h("table",{},h("tbody",{},Object.entries(r.comp).map(([e,n])=>h("tr",{},h("td",{},e+" × "+n),h("td",{},(n*M[e]).toFixed(2)+" g"),h("td",{},(n*M[e]/r.tot*100).toFixed(1)+"%")))))))}catch(e){out.replaceChildren(h("p",{class:"msg no"},String(e&&e.message||e)))}};
+ const fill=()=>{const s=norm(sr.value);tb.replaceChildren(h("table",{},h("thead",{},h("tr",{},["Z","Symbol","Name","Mass"].map(x=>h("th",{},x)))),h("tbody",{},EL.map((e,i)=>[e,i]).filter(([e])=>!s||norm(e[0]+" "+e[1]).includes(s)).map(([e,i])=>h("tr",{},h("td",{},e[3]||i+1),h("td",{},h("b",{},e[0])),h("td",{},e[1]),h("td",{},e[2]))))))};sr.oninput=fill;fill();
+ return h("div",{},h("h3",{},"Molar mass calculator"),h("label",{},"Formula",inp),out,h("h3",{},"Elements"),sr,tb)}
+const tools=()=>{const p=ask(toolsNode(),{ok:"Close"});$("#dlg").classList.add("w");p.then(()=>$("#dlg").classList.remove("w"))};
+VIEWS.tools=()=>h("div",{},h("h2",{},"Chemistry tools"),h("div",{class:"card"},toolsNode()),h("p",{class:"mu sm"},"Also available inside practice modes. Locked during timed exams."));
+/* ---- editor, trash, merge ---- */
+const TR=()=>{try{return JSON.parse(localStorage.getItem("cml4.trash"))||[]}catch(e){return[]}},TW=a=>{try{localStorage.setItem("cml4.trash",JSON.stringify(a.slice(-20)))}catch(e){}};
+const shrink=f=>new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const k=Math.min(1,900/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=i.width*k;c.height=i.height*k;c.getContext("2d").drawImage(i,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.8))};i.onerror=()=>res("");i.src=r.result};r.readAsDataURL(f)});
+async function editQ(q){const nw=!q,B=A(),f={};let img=q&&q.img||"",del=0;
+ const fl=(k,l,ta,v)=>{f[k]=h(ta?"textarea":"input",{style:ta?"min-height:4.5rem":null});f[k].value=v??"";return h("label",{},l,f[k])},
+  sub=h("select",{},S.banks.map(b=>h("option",{value:b.id,selected:b.id===B.id},b.name))),rv=h("input",{type:"checkbox"}),fi=h("input",{type:"file",accept:"image/*",onchange:async()=>{if(fi.files[0])img=await shrink(fi.files[0])}});
+ const r=await ask(h("div",{},h("h3",{},nw?"New question":"Edit question"),fl("prompt","Question (write [[word]] to make cloze blanks)",1,q&&q.prompt),fl("answers","Accepted answers, one per line",1,L(q&&q.answers)),fl("options","Choices for multiple choice, one per line",1,L(q&&q.options)),fl("topic","Topic",0,q&&q.topic),fl("difficulty","Difficulty: easy, medium or hard",0,q&&q.difficulty),fl("type","Answer type: text, number or formula",0,q&&q.type),fl("tol","Number tolerance (0.01 = 1%)",0,q&&q.tol),fl("explanation","Explanation",1,q&&q.explanation),fl("memoryTip","Memory tip",1,q&&q.memoryTip),fl("hints","Hints, one per line",1,L(q&&q.hints)),
+  h("label",{},"Diagram image",fi),h("label",{},"Bank",sub),h("label",{},rv,"Also create a reverse card (answer → question)"),!nw&&h("button",{class:"btn d",type:"button",onclick:()=>{del=1;$("#dlg").close("y")}},"Delete question")),{ok:"Save"});
+ if(!r)return;
+ if(del){const a=TR();a.push({q,b:B.id});TW(a);B.questions=B.questions.filter(x=>x.id!==q.id);save("banks");toast("Deleted. Use “Restore last deleted” in the Library to undo.");return go()}
+ const g=k=>f[k].value.trim(),ls=k=>g(k).split(/\n/).map(s=>s.trim()).filter(Boolean),tb=S.banks.find(b=>b.id===sub.value)||B,uid=i=>"u_"+now().toString(36)+i;
+ try{const base={topic:g("topic"),difficulty:g("difficulty"),type:g("type"),tol:g("tol")||undefined,explanation:g("explanation"),memoryTip:g("memoryTip"),hints:ls("hints"),options:ls("options"),img},m=[...g("prompt").matchAll(/\[\[(.+?)\]\]/g)],out=[];
+  if(m.length)m.forEach((x,i)=>{let k=-1;out.push(nq({...base,options:[],prompt:g("prompt").replace(/\[\[(.+?)\]\]/g,(_,w)=>++k===i?"_____":w),answers:[x[1]],id:m.length>1||nw?uid(i):q.id}))});
+  else out.push(nq({...base,prompt:g("prompt"),answers:ls("answers"),id:nw?uid(""):q.id}));
+  if(rv.checked&&!m.length)out.push(nq({topic:base.topic,difficulty:base.difficulty,prompt:out[0].answers[0],answers:[out[0].prompt],id:uid("r")}));
+  const rest=B.questions.filter(x=>!q||x.id!==q.id),pool=tb===B?rest:tb.questions;
+  out.forEach(o=>{if(pool.some(x=>norm(x.prompt)===norm(o.prompt)))throw "A question with the same text already exists."});
+  B.questions=rest;tb.questions.push(...out);save("banks");toast("Saved "+out.length+" card"+(out.length>1?"s":"")+".");go()}catch(e){toast(String(e&&e.message||e))}}
+window.editQ=editQ;
+function restoreQ(){const a=TR(),x=a.pop();if(!x)return toast("Nothing to restore.");const b=S.banks.find(b=>b.id===x.b)||A();if(b.questions.some(q=>q.id===x.q.id||norm(q.prompt)===norm(x.q.prompt)))toast("That question is already in the bank.");else{b.questions.push(x.q);save("banks");toast("Restored.")}TW(a);go()}
+async function mergeB(){const o=S.banks.filter(b=>b.id!==A().id);if(!o.length)return toast("There is no other bank to merge.");const sl=h("select",{},o.map(b=>h("option",{value:b.id},b.name+" ("+b.questions.length+")")));
+ if(!await ask(h("div",{},p0("Duplicates are skipped. The other bank is removed after merging."),h("label",{},"Merge from",sl)),{ok:"Merge"}))return;
+ const s=S.banks.find(b=>b.id===sl.value),p=plan(s.questions,Q());A().questions.push(...p.add);S.banks=S.banks.filter(b=>b!==s);save("banks");toast("Merged "+p.add.length+" questions; skipped "+p.skip.length+".");go()}
+const p0=t=>h("p",{},t),oL=VIEWS.lib;
+VIEWS.lib=()=>{const el=oL();el.children[1].after(h("div",{class:"row"},h("button",{class:"btn p",onclick:()=>editQ()},"New question"),h("button",{class:"btn",onclick:restoreQ},"Restore last deleted"),h("button",{class:"btn",onclick:mergeB},"Merge another bank into this one")));return el};
+/* ---- insights: misconceptions, diagnosis, speed, exam analytics ---- */
+VIEWS.ins=()=>{const el=h("div",{}),bid=A().id,at=S.attempts.filter(x=>x.b===bid&&qid(x.q)),mode=a=>Object.entries(a.reduce((m,x)=>(m[x]=(m[x]||0)+1,m),{})).sort((x,y)=>y[1]-x[1])[0][0],
+ pc=(q,t)=>h("div",{class:"row"},h("span",{style:"flex:1"},q.prompt.length>110?q.prompt.slice(0,108)+"…":q.prompt),h("span",{class:"sm mu"},t)),dr=(l,t,fn)=>h("button",{class:"btn p",onclick:()=>fn.length?startStudy("practice",fn,t):toast("Nothing to drill yet.")},l);
+ const hc={};at.filter(x=>!x.ok&&x.c===3&&x.ans&&x.ans[0]!=="(").forEach(x=>(hc[x.q]=hc[x.q]||[]).push(x.ans));const hl=Object.entries(hc).sort((a,b)=>b[1].length-a[1].length).slice(0,10);
+ const dx={};at.forEach(x=>{if(x.d)dx[x.d]=(dx[x.d]||0)+1});const dm=Math.max(1,...Object.values(dx));
+ const tm=at.filter(x=>x.s>0),sm=tm.map(x=>x.s).sort((a,b)=>a-b)[tm.length>>1]||0,slow={};tm.filter(x=>x.ok&&x.s>Math.max(20,sm*2)).forEach(x=>slow[x.q]=Math.max(slow[x.q]||0,x.s));const sl=Object.entries(slow).sort((a,b)=>b[1]-a[1]).slice(0,8);
+ const ex=S.exams.filter(e=>e.bank===bid),tp={};ex.forEach(e=>e.rows.forEach(r=>{const q=qid(r.id);if(!q)return;const t=tp[q.topic]||(tp[q.topic]={n:0,o:0});t.n++;t.o+=r.ok}));
+ const miss=[...new Set(ex.flatMap(e=>e.rows.filter(r=>!r.ok).map(r=>r.id)))].map(qid).filter(Boolean),qs=ex.reduce((t,e)=>t+e.total,0);
+ el.append(h("h2",{},"Insights"),
+  h("div",{class:"card"},h("h3",{},"Confident but wrong"),h("p",{class:"mu sm"},"Wrong answers you rated “Sure” are misconceptions, not gaps. Fix these first."),hl.length?[hl.map(([id,a])=>{const q=qid(id);return pc(q,a.length+"× sure and wrong · usual wrong answer: "+mode(a)+" · correct: "+q.answers[0])}),dr("Drill these","Misconception drill",hl.map(x=>qid(x[0])))]:h("p",{class:"mu"},"None yet. Rate your confidence as you answer to fill this list.")),
+  h("div",{class:"card"},h("h3",{},"Why you miss questions"),Object.keys(dx).length?DX.map(([k,l])=>h("div",{class:"row"},h("span",{style:"width:8rem"},l),h("div",{class:"bar"},h("i",{style:"width:"+(dx[k]||0)/dm*100+"%"})),h("span",{},dx[k]||0))):h("p",{class:"mu"},"After a miss in Practice, tap the reason. Each cause needs a different fix.")),
+  h("div",{class:"card"},h("h3",{},"Speed"),h("p",{},tm.length?"Median time per answer: "+sm+" s over "+tm.length+" timed answers.":"Timing starts with your next answer."),sl.length?[h("p",{class:"mu sm"},"Correct but slow (over twice your median):"),sl.map(([id,s])=>pc(qid(id),s+" s")),dr("Drill slow questions","Speed drill",sl.map(x=>qid(x[0])))]:null),
+  h("div",{class:"card"},h("h3",{},"Mock exams"),ex.length?[h("p",{},"Average "+(qs?Math.round(ex.reduce((t,e)=>t+e.secs,0)/qs):0)+" s per question over "+ex.length+" exams."),h("div",{class:"cols",role:"img","aria-label":"Exam scores"},ex.slice(0,12).reverse().map(e=>{const p=e.total?Math.round(e.ok/e.total*100):0;return h("div",{class:"col",title:p+"%"},h("i",{style:"height:"+p+"%"},h("b",{},p)),h("span",{},new Date(e.at).getDate()))})),
+   h("div",{class:"tw"},h("table",{},h("tbody",{},Object.entries(tp).sort((a,b)=>a[1].o/a[1].n-b[1].o/b[1].n).map(([t,x])=>h("tr",{},h("td",{},t),h("td",{},x.o+" / "+x.n),h("td",{},Math.round(x.o/x.n*100)+"%")))))),dr("Practise everything missed in exams","Exam remedial",miss)]:h("p",{class:"mu"},"Take a mock exam to see scores by topic, time per question and a remedial set.")));return el};
+/* ---- daily plan, mock exam builder, sprint ---- */
+VIEWS.plan=()=>{const el=h("div",{}),bud=S.prefs.mins||120,pri=S.prefs.pri||(S.prefs.pri={}),tot=S.banks.reduce((t,b)=>t+(pri[b.id]||3),0);
+ el.append(h("h2",{},"Daily plan"),h("p",{class:"mu"},"Each bank is a subject. Set priorities and your daily time; the plan splits the time and shows what is due."),h("div",{class:"card"},h("label",{},"Minutes available per day",h("input",{type:"number",min:10,max:600,value:bud,onchange:e=>{S.prefs.mins=+e.target.value||120;save("prefs");go()}}))),
+  S.banks.map(b=>{const ids=new Set(b.questions.map(q=>q.id)),due=Object.keys(S.srs).filter(id=>ids.has(id)&&S.srs[id].due<=now()).length,nw=b.questions.filter(q=>!(S.progress[q.id]&&S.progress[q.id].att)).length,ms=b.questions.filter(q=>S.progress[q.id]&&S.progress[q.id].state==="mastered").length,p=pri[b.id]||3;
+   return h("div",{class:"card"},h("div",{class:"row"},h("b",{style:"flex:1"},b.name),h("span",{class:"pill"},Math.round(bud*p/tot)+" min today")),h("p",{class:"mu sm"},due+" due · "+nw+" new · "+ms+" of "+b.questions.length+" mastered"),
+    h("div",{class:"row"},h("label",{style:"flex:1;margin:0"},"Priority "+p+" of 5",h("input",{type:"range",min:1,max:5,value:p,onchange:e=>{pri[b.id]=+e.target.value;save("prefs");go()}})),h("button",{class:"btn p",onclick:()=>{S.prefs.bank=b.id;save("prefs");startStudy("practice",FILT.smart(),b.name+" · smart session",true)}},"Study now")))}));return el};
+VIEWS.exam=()=>{const el=h("div",{}),tops=[...new Set(Q().map(q=>q.topic))],N=Q().length,n=h("input",{type:"number",min:1,max:N,value:Math.min(20,N)}),mn=h("input",{type:"number",min:1,max:300,value:Math.min(20,N)}),w=Object.fromEntries(tops.map(t=>[t,h("input",{type:"number",min:0,max:100,value:Math.round(100/tops.length)})])),dm=[25,50,25].map(v=>h("input",{type:"number",min:0,max:100,value:v}));
+ const build=()=>{const T=Math.min(+n.value||1,N),tw=tops.map(t=>+w[t].value||0),sum=tw.reduce((a,b)=>a+b,0)||1,dw=dm.map(x=>+x.value||0),ds=dw.reduce((a,b)=>a+b,0)||1,out=[],used=new Set();
+  tops.forEach((t,i)=>{let k=Math.round(T*tw[i]/sum);const pool=shuffle(Q().filter(q=>q.topic===t));while(k-->0&&pool.length){let r=Math.random()*ds,d=0;while(d<2&&(r-=dw[d])>0)d++;const j=pool.findIndex(q=>q.difficulty===["easy","medium","hard"][d]),q=pool.splice(j<0?0:j,1)[0];used.add(q.id);out.push(q)}});
+  const rest=shuffle(Q().filter(q=>!used.has(q.id)));while(out.length<T&&rest.length)out.push(rest.pop());return out};
+ el.append(h("h2",{},"Mock exam and sprint"),h("div",{class:"card"},h("h3",{},"Exam blueprint"),h("div",{class:"grid"},h("label",{},"Questions",n),h("label",{},"Minutes",mn)),h("h3",{},"Topic weights (relative)"),h("div",{class:"grid"},tops.map(t=>h("label",{},t,w[t]))),h("h3",{},"Difficulty mix (relative)"),h("div",{class:"grid"},["Easy","Medium","Hard"].map((l,i)=>h("label",{},l,dm[i]))),
+  h("div",{class:"row"},h("button",{class:"btn p",onclick:()=>{const l=build();if(!l.length)return toast("This bank has no questions.");startStudy("exam",l,"Mock exam");W.end=now()+(+mn.value||20)*6e4;openStudy()}},"Start mock exam"))),
+  h("div",{class:"card"},h("h3",{},"60-second sprint"),h("p",{class:"mu"},"Multiple choice with auto-advance. Answer as many as you can in one minute."),h("button",{class:"btn p",onclick:()=>{startStudy("quiz",shuffle(Q()).slice(0,100),"Sprint · 60 s",true);W.sprint=1;W.end=now()+6e4;openStudy()}},"Start sprint")));return el};
+/* ---- question studio (content pipeline) ---- */
+const PROMPT=(s,t,n,d)=>`You are an expert ${s} examiner writing questions for the Ethiopian University Entrance Examination (EUEE) and SAT-level practice.
+Write ${n} ${d==="mixed"?"questions of mixed difficulty (about 30% easy, 40% medium, 30% hard)":d+" questions"} on: ${t||"the topics I name next"}.
+Rules: each question must be unambiguous with exactly one correct answer, scientifically correct and answerable by typing. Prefer multi-step reasoning, calculations, applications, exceptions and common misconceptions over recall. Make the three wrong options plausible misconceptions. Use Unicode notation (H₂SO₄, Fe³⁺, →, ⇌, °C). List every accepted spelling or format in "answers". For calculations use "type":"number", a numeric answer, "tol":0.01 and put the unit in the prompt. For formulas and symbols use "type":"formula" (case-sensitive).
+Return ONLY a JSON array with no commentary and no code fences. Each item:
+{"id":"unique-short-id","topic":"${t||"Topic"}","difficulty":"easy|medium|hard","type":"text|number|formula","prompt":"question","answers":["accepted answer"],"options":["right","wrong","wrong","wrong"],"hints":["hint 1","hint 2"],"explanation":"why it is correct, step by step","commonMistakes":"typical wrong reasoning","workedExample":"optional","memoryTip":"short memory aid","examTrap":"what examiners exploit"}`;
+VIEWS.gen=()=>{const sj=h("input",{value:"Chemistry"}),tp=h("input",{placeholder:"e.g. Chemical bonding"}),nn=h("input",{type:"number",value:20,min:1,max:100}),df=h("select",{},["mixed","easy","medium","hard"].map(x=>h("option",{},x))),pr=h("textarea",{readonly:true,style:"min-height:13rem"}),ta=h("textarea",{placeholder:"Paste the AI’s JSON reply here",style:"min-height:9rem"}),mk=()=>pr.value=PROMPT(sj.value,tp.value,nn.value,df.value);
+ [sj,tp,nn,df].forEach(x=>x.oninput=mk);mk();
+ return h("div",{},h("h2",{},"Question studio"),h("div",{class:"card"},h("h3",{},"1. Generate a question set with any AI"),h("div",{class:"grid"},h("label",{},"Subject",sj),h("label",{},"Topic",tp),h("label",{},"How many",nn),h("label",{},"Difficulty",df)),h("label",{},"Prompt to paste into your AI",pr),h("button",{class:"btn p",onclick:async()=>{try{await navigator.clipboard.writeText(pr.value)}catch(e){pr.select();document.execCommand("copy")}toast("Prompt copied.")}},"Copy prompt")),
+  h("div",{class:"card"},h("h3",{},"2. Add the reply to the active bank"),ta,h("div",{class:"row"},h("button",{class:"btn p",onclick:()=>{const r=analyze(ta.value.replace(/^```(?:json)?|```$/gm,"").trim());if(r.err)return toast(r.err);const p=plan(r.ok,Q());A().questions.push(...p.add);save("banks");toast("Added "+p.add.length+"; skipped "+p.skip.length+" duplicates; rejected "+r.rej.length+".");ta.value=""}},"Add questions"))))};
+/* ---- dashboard backup reminder, settings: storage, sync, goals ---- */
+const oD2=VIEWS.dash;VIEWS.dash=()=>{const el=oD2(),d=(now()-(S.prefs.lastExport||0))/day;if(S.attempts.length>5&&d>7)el.children[1].after(h("div",{class:"msg wn"},"Last backup: "+(S.prefs.lastExport?Math.floor(d)+" days ago":"never")+". ",h("button",{class:"btn",onclick:()=>backup()},"Download backup")));return el};
+const usage=()=>{try{return Object.keys(localStorage).filter(k=>k.indexOf("cml4.")===0).reduce((t,k)=>t+(k.length+(localStorage.getItem(k)||"").length)*2,0)}catch(e){return 0}};
+const b64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result.split(",")[1]);f.readAsDataURL(b)});
+const pack=async()=>b64(await new Response(new Blob([JSON.stringify({cml:4,S})]).stream().pipeThrough(new CompressionStream("gzip"))).blob());
+async function unpack(c){const o=JSON.parse(await new Response(new Blob([Uint8Array.from(atob(c),x=>x.charCodeAt(0))]).stream().pipeThrough(new DecompressionStream("gzip"))).text());if(o.cml!==4||!o.S)throw 0;
+ if(!await ask("Replace everything on this device with the data in this code?",{ok:"Replace",danger:true}))return;
+ for(const k in DEF)if(kind(o.S[k])===kind(DEF[k]))S[k]=o.S[k];cleanBanks();if(!S.banks.some(b=>b.id===S.prefs.bank))S.prefs.bank=S.banks[0].id;W=null;S.sessions.active=null;applyPrefs();save();toast("Restored.");go("dash")}
+const oS2=VIEWS.set;VIEWS.set=()=>{const el=oS2(),ta=h("textarea",{placeholder:"Paste a transfer code here",style:"min-height:6rem"}),u=usage();
+ el.children[1].after(h("div",{class:"card"},h("h3",{},"Storage and sync"),h("p",{},"Using about "+Math.round(u/1024)+" KB of roughly 5,000 KB in this browser."),h("div",{class:"bar"},h("i",{style:"width:"+Math.min(100,u/52429)+"%"})),
+  h("p",{class:"mu sm"},"A transfer code moves banks, progress and schedules to another device: create it here, paste it there."),
+  h("div",{class:"row"},h("button",{class:"btn",onclick:async()=>{try{const c=await pack();ta.value=c;try{await navigator.clipboard.writeText(c);toast("Transfer code copied.")}catch(e){toast("Code ready: copy it from the box.")}}catch(e){toast("This browser cannot create a code.")}}},"Create transfer code"),h("button",{class:"btn d",onclick:async()=>{try{await unpack(ta.value.trim())}catch(e){toast("That code is not valid.")}}},"Restore from code")),ta,
+  h("label",{},"New questions per day in smart sessions",h("input",{type:"number",min:0,max:200,value:S.prefs.ncap==null?10:S.prefs.ncap,onchange:e=>{S.prefs.ncap=+e.target.value;save("prefs")}})),
+  h("label",{},h("input",{type:"checkbox",checked:S.prefs.fsAuto!==false,onchange:e=>{S.prefs.fsAuto=e.target.checked;save("prefs")}}),"Enter full screen on first tap")));return el};
+shell();go();
+/* ===== Chemistry Mastery Lab — compatibility-first enhancement pack ===== */
+(()=>{
+  const BUILD = "2026.10";
+  const oldApplyPrefs = applyPrefs;
+
+  /* Complete element reference data. For radioactive elements, the listed mass is a commonly cited isotope mass number. */
+  const elementData = `H|Hydrogen|1.008
+He|Helium|4.0026
+Li|Lithium|6.94
+Be|Beryllium|9.0122
+B|Boron|10.81
+C|Carbon|12.011
+N|Nitrogen|14.007
+O|Oxygen|15.999
+F|Fluorine|18.998
+Ne|Neon|20.180
+Na|Sodium|22.990
+Mg|Magnesium|24.305
+Al|Aluminium|26.982
+Si|Silicon|28.085
+P|Phosphorus|30.974
+S|Sulphur|32.06
+Cl|Chlorine|35.45
+Ar|Argon|39.948
+K|Potassium|39.098
+Ca|Calcium|40.078
+Sc|Scandium|44.956
+Ti|Titanium|47.867
+V|Vanadium|50.942
+Cr|Chromium|51.996
+Mn|Manganese|54.938
+Fe|Iron|55.845
+Co|Cobalt|58.933
+Ni|Nickel|58.693
+Cu|Copper|63.546
+Zn|Zinc|65.38
+Ga|Gallium|69.723
+Ge|Germanium|72.630
+As|Arsenic|74.922
+Se|Selenium|78.971
+Br|Bromine|79.904
+Kr|Krypton|83.798
+Rb|Rubidium|85.468
+Sr|Strontium|87.62
+Y|Yttrium|88.906
+Zr|Zirconium|91.224
+Nb|Niobium|92.906
+Mo|Molybdenum|95.95
+Tc|Technetium|98
+Ru|Ruthenium|101.07
+Rh|Rhodium|102.91
+Pd|Palladium|106.42
+Ag|Silver|107.8682
+Cd|Cadmium|112.414
+In|Indium|114.818
+Sn|Tin|118.710
+Sb|Antimony|121.760
+Te|Tellurium|127.60
+I|Iodine|126.90447
+Xe|Xenon|131.293
+Cs|Caesium|132.90545
+Ba|Barium|137.327
+La|Lanthanum|138.90547
+Ce|Cerium|140.116
+Pr|Praseodymium|140.90766
+Nd|Neodymium|144.242
+Pm|Promethium|145
+Sm|Samarium|150.36
+Eu|Europium|151.964
+Gd|Gadolinium|157.25
+Tb|Terbium|158.92535
+Dy|Dysprosium|162.500
+Ho|Holmium|164.93033
+Er|Erbium|167.259
+Tm|Thulium|168.93422
+Yb|Ytterbium|173.045
+Lu|Lutetium|174.9668
+Hf|Hafnium|178.49
+Ta|Tantalum|180.94788
+W|Tungsten|183.84
+Re|Rhenium|186.207
+Os|Osmium|190.23
+Ir|Iridium|192.217
+Pt|Platinum|195.084
+Au|Gold|196.96657
+Hg|Mercury|200.592
+Tl|Thallium|204.38
+Pb|Lead|207.2
+Bi|Bismuth|208.98040
+Po|Polonium|209
+At|Astatine|210
+Rn|Radon|222
+Fr|Francium|223
+Ra|Radium|226
+Ac|Actinium|227
+Th|Thorium|232.0377
+Pa|Protactinium|231.03588
+U|Uranium|238.02891
+Np|Neptunium|237
+Pu|Plutonium|244
+Am|Americium|243
+Cm|Curium|247
+Bk|Berkelium|247
+Cf|Californium|251
+Es|Einsteinium|252
+Fm|Fermium|257
+Md|Mendelevium|258
+No|Nobelium|259
+Lr|Lawrencium|266
+Rf|Rutherfordium|267
+Db|Dubnium|268
+Sg|Seaborgium|269
+Bh|Bohrium|270
+Hs|Hassium|277
+Mt|Meitnerium|278
+Ds|Darmstadtium|281
+Rg|Roentgenium|282
+Cn|Copernicium|285
+Nh|Nihonium|286
+Fl|Flerovium|289
+Mc|Moscovium|290
+Lv|Livermorium|293
+Ts|Tennessine|294
+Og|Oganesson|294`.split("\n").map((line,i)=>{
+    const [symbol,name,mass]=line.split("|");
+    return [symbol,name,+mass,i+1];
+  });
+  // Mutate, rather than replace, the existing global array/object to retain callers that hold their references.
+  EL.splice(0, EL.length, ...elementData);
+  for (const e of elementData) M[e[0]] = e[2];
+
+  const validSymbols = new Set(elementData.map(e=>e[0]));
+  function readDigits(source, state){
+    const start=state.i;
+    while(state.i<source.length && /\d/.test(source[state.i])) state.i++;
+    if(start===state.i) return null;
+    const n=Number(source.slice(start,state.i));
+    if(!Number.isSafeInteger(n)||n<1||n>1000000) throw new Error("Subscripts and multipliers must be positive whole numbers.");
+    return n;
+  }
+  function formulaCounts(formula){
+    if(typeof formula!=="string"||!formula.trim()) throw new Error("Enter a chemical formula.");
+    const source=formula.normalize("NFKC").replace(/\s+/g,"");
+    const pieces=source.split(/[·⋅.]/);
+    if(pieces.some(x=>!x)) throw new Error("Check the hydrate separator in the formula.");
+    const total={};
+    const add=(dest,src,mul=1)=>{for(const [el,n] of Object.entries(src))dest[el]=(dest[el]||0)+n*mul};
+    for(let piece of pieces){
+      const lead=piece.match(/^(\d+)/);
+      const multiplier=lead?Number(lead[1]):1;
+      if(!Number.isSafeInteger(multiplier)||multiplier<1||multiplier>1000000) throw new Error("The leading multiplier must be a positive whole number.");
+      if(lead) piece=piece.slice(lead[1].length);
+      if(!piece) throw new Error("A multiplier must be followed by a formula.");
+      const state={i:0};
+      function group(expected){
+        const comp={}; let tokens=0;
+        while(state.i<piece.length){
+          const c=piece[state.i];
+          if(c===")"||c==="]"){
+            if(!expected||c!==expected) throw new Error("Mismatched or unexpected closing bracket.");
+            state.i++;
+            if(!tokens) throw new Error("Empty brackets are not a valid formula group.");
+            return comp;
+          }
+          if(c==="("||c==="["){
+            state.i++;
+            const close=c==="("?")":"]";
+            const inner=group(close);
+            const n=readDigits(piece,state)||1;
+            add(comp,inner,n); tokens++;
+            continue;
+          }
+          const match=piece.slice(state.i).match(/^[A-Z][a-z]?/);
+          if(!match) throw new Error("Unexpected character “"+c+"” in the formula.");
+          const symbol=match[0]; state.i+=symbol.length;
+          if(!validSymbols.has(symbol)) throw new Error("Unknown element symbol: "+symbol+".");
+          const n=readDigits(piece,state)||1;
+          comp[symbol]=(comp[symbol]||0)+n; tokens++;
+        }
+        if(expected) throw new Error("An opening bracket has no matching closing bracket.");
+        if(!tokens) throw new Error("Enter at least one element.");
+        return comp;
+      }
+      add(total,group(null),multiplier);
+      if(state.i!==piece.length) throw new Error("Could not read the entire formula.");
+    }
+    return total;
+  }
+  // Harden the original molar-mass parser without changing its public return shape.
+  mm=function(formula){
+    const comp=formulaCounts(formula); let tot=0;
+    for(const [symbol,count] of Object.entries(comp)) tot+=count*M[symbol];
+    if(!Number.isFinite(tot)||tot<=0) throw new Error("Could not calculate a valid molar mass.");
+    return {tot,comp};
+  };
+
+  const elByZ=s=>elementData.find(e=>e[0]===s)?.[3]||999;
+  const gcd=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b){const t=a%b;a=b;b=t}return a||1};
+  const lcm=(a,b)=>Math.abs(a*b)/gcd(a,b);
+  function smallFraction(x){
+    for(let d=1;d<=1000;d++){
+      const n=Math.round(x*d);
+      if(Math.abs(x-n/d)<1e-7) return [n,d];
+    }
+    return [Math.round(x*1000000),1000000];
+  }
+  function balanceEquation(raw){
+    if(typeof raw!=="string"||!raw.trim()) throw new Error("Enter a reaction to balance.");
+    const hit=raw.trim().match(/^(.*?)\s*(?:<=>|⇌|↔|->|=>|→|=)\s*(.*?)$/u);
+    if(!hit||!hit[1].trim()||!hit[2].trim()) throw new Error("Use an arrow between reactants and products, for example: H2 + O2 -> H2O.");
+    const parseSide=(text)=>text.split(/\s*\+\s*/).map(term=>{
+      const compact=term.trim().replace(/\s+/g,"");
+      const formula=compact.replace(/^\d+(?=[A-Z[(])/,"");
+      if(!formula) throw new Error("One of the reaction terms is empty.");
+      return {formula,atoms:formulaCounts(formula)};
+    });
+    const left=parseSide(hit[1]),right=parseSide(hit[2]),species=[...left,...right],n=species.length;
+    if(left.length<1||right.length<1||n<2||n>12) throw new Error("Use between 2 and 12 chemical species.");
+    const symbols=[...new Set(species.flatMap(s=>Object.keys(s.atoms)))].sort((a,b)=>elByZ(a)-elByZ(b));
+    const matrix=symbols.map(symbol=>species.map((s,i)=>(i<left.length?1:-1)*(s.atoms[symbol]||0)));
+    // Reduced row-echelon form; common school reactions have a one-dimensional null space.
+    let r=0; const pivots=[];
+    for(let c=0;c<n&&r<matrix.length;c++){
+      let p=r; for(let k=r+1;k<matrix.length;k++) if(Math.abs(matrix[k][c])>Math.abs(matrix[p][c])) p=k;
+      if(Math.abs(matrix[p][c])<1e-10) continue;
+      [matrix[r],matrix[p]]=[matrix[p],matrix[r]];
+      const pv=matrix[r][c]; for(let j=0;j<n;j++) matrix[r][j]/=pv;
+      for(let k=0;k<matrix.length;k++) if(k!==r){const f=matrix[k][c];if(Math.abs(f)>1e-10)for(let j=0;j<n;j++)matrix[k][j]-=f*matrix[r][j]}
+      pivots.push(c);r++;
+    }
+    // Discard redundant zero rows; a nonzero constant row means the equation is inconsistent.
+    for(let k=r;k<matrix.length;k++) if(matrix[k].some(v=>Math.abs(v)>1e-8)) throw new Error("These formulas do not form a balanceable reaction. Check the species and arrow.");
+    const free=Array.from({length:n},(_,i)=>i).filter(i=>!pivots.includes(i));
+    if(free.length!==1) throw new Error("This reaction has multiple or no simple balancing ratios. Check the formulas and try writing the simplest species set.");
+    const x=Array(n).fill(0);x[free[0]]=1;
+    for(let k=pivots.length-1;k>=0;k--) x[pivots[k]]=-matrix[k][free[0]];
+    if(x.every(v=>v<0)) for(let i=0;i<x.length;i++)x[i]*=-1;
+    if(x.some(v=>!Number.isFinite(v)||v<=1e-8)) throw new Error("No all-positive coefficient set was found for this reaction.");
+    const fr=x.map(smallFraction);let scale=fr.reduce((a,v)=>lcm(a,v[1]),1);
+    let coeffs=fr.map(([num,den])=>Math.round(num*scale/den));
+    if(coeffs.some(v=>!Number.isSafeInteger(v)||v<1||v>1000000)) throw new Error("The coefficients are too large to present safely.");
+    const div=coeffs.reduce((a,b)=>gcd(a,b));coeffs=coeffs.map(v=>v/div);
+    const rows=symbols.map(symbol=>({symbol,left:left.reduce((s,q,i)=>s+coeffs[i]*(q.atoms[symbol]||0),0),right:right.reduce((s,q,i)=>s+coeffs[i+left.length]*(q.atoms[symbol]||0),0)}));
+    if(rows.some(q=>q.left!==q.right)) throw new Error("A clean integer balance could not be verified. Try another equation format.");
+    const side=(items,co)=>items.map((s,i)=>(co[i]===1?"":co[i]+" ")+s.formula.replace(/(\d+)/g,d=>d.replace(/\d/g,x=>"₀₁₂₃₄₅₆₇₈₉"[+x]))).join(" + ");
+    return {left,right,coeffs,rows,equation:side(left,coeffs.slice(0,left.length))+" → "+side(right,coeffs.slice(left.length))};
+  }
+
+  // Refresh the existing theme selector's feedback while keeping the same preference keys and behavior.
+  applyPrefs=function(){
+    oldApplyPrefs();
+    const b=$("#th"),dark=document.documentElement.dataset.t==="dark";
+    if(b){b.textContent=dark?"☀ Light":"☾ Dark";b.title=dark?"Switch to light theme":"Switch to dark theme";b.setAttribute("aria-label",dark?"Switch to light theme":"Switch to dark theme")}
+    let meta=document.querySelector('meta[name="theme-color"]');
+    if(!meta){meta=document.createElement("meta");meta.name="theme-color";document.head.append(meta)}
+    meta.content=dark?"#1c1c1e":"#f2f2f7";
+  };
+  applyPrefs();
+
+  const previousToolsView=VIEWS.tools;
+  VIEWS.tools=function(){
+    const root=previousToolsView();
+    const search=root.querySelector('input[type="search"]');
+    if(search){search.placeholder="Search any of 118 elements by symbol or name";search.setAttribute("aria-label","Search all 118 elements by symbol or name")}
+    const eqInput=h("input",{type:"text",value:"H2 + O2 -> H2O",autocomplete:"off",spellcheck:"false","aria-label":"Unbalanced chemical equation",placeholder:"e.g. Fe + O2 -> Fe2O3"});
+    const eqOut=h("div",{class:"chem-output","aria-live":"polite"});
+    const renderBalance=()=>{
+      try{
+        const result=balanceEquation(eqInput.value);
+        const table=h("div",{class:"tw chem-table"},h("table",{},h("thead",{},h("tr",{},["Element","Reactant side","Product side","Status"].map(t=>h("th",{},t)))),h("tbody",{},result.rows.map(row=>h("tr",{},h("td",{},row.symbol),h("td",{},String(row.left)),h("td",{},String(row.right)),h("td",{},row.left===row.right?"Balanced":"Check"))))));
+        eqOut.replaceChildren(h("div",{class:"msg ok"},h("strong",{},"Balanced equation"),h("p",{class:"chem-equation"},result.equation)),table);
+      }catch(err){eqOut.replaceChildren(h("div",{class:"msg no"},String(err&&err.message||err)))}
+    };
+    const examples=["H2 + O2 -> H2O","Fe + O2 -> Fe2O3","Al + HCl -> AlCl3 + H2","C3H8 + O2 -> CO2 + H2O","Ca(OH)2 + HCl -> CaCl2 + H2O"];
+    const exampleRow=h("div",{class:"row chem-examples"},examples.map((s)=>h("button",{class:"btn",type:"button",onclick:()=>{eqInput.value=s;renderBalance()}},s)));
+    eqInput.addEventListener("input",()=>{if(eqInput.value.trim())renderBalance();else eqOut.replaceChildren()});
+    const balancer=h("section",{class:"card chem-card"},h("h3",{},"Chemical equation balancer"),h("p",{class:"mu"},"Balance common neutral-formula reactions by atom count. Enter formulas without needing to know the coefficients first."),h("label",{},"Reaction",eqInput),h("div",{class:"row"},h("button",{class:"btn p",type:"button",onclick:renderBalance},"Balance equation"),h("button",{class:"btn",type:"button",onclick:()=>{eqInput.value="";eqOut.replaceChildren();eqInput.focus()}},"Clear")),exampleRow,eqOut,h("p",{class:"mu sm"},"Note: ionic charges, redox half-reactions, and reactions with multiple independent balancing ratios are not handled by this basic balancer."));
+    renderBalance();
+
+    const form=h("input",{type:"text",value:"H2SO4",autocomplete:"off",spellcheck:"false",placeholder:"e.g. NaCl or H2SO4","aria-label":"Chemical formula for solution calculator"});
+    const mass=h("input",{type:"number",min:"0",step:"any",value:"9.8","aria-label":"Mass in grams"});
+    const volume=h("input",{type:"number",min:"0",step:"any",value:"250","aria-label":"Solution volume in millilitres"});
+    const calcOut=h("div",{class:"chem-output","aria-live":"polite"});
+    const calculate=()=>{
+      try{
+        const m=Number(mass.value),v=Number(volume.value);
+        if(!form.value.trim()) throw new Error("Enter a chemical formula.");
+        if(!mass.value.trim()||!Number.isFinite(m)||m<0) throw new Error("Enter a valid mass in grams (zero or greater).");
+        if(!volume.value.trim()||!Number.isFinite(v)||v<=0) throw new Error("Solution volume must be greater than zero mL.");
+        const mr=mm(form.value).tot,n=m/mr,c=n/(v/1000);
+        calcOut.replaceChildren(h("div",{class:"grid chem-results"},
+          h("div",{class:"card stat"},h("span",{class:"mu sm"},"Molar mass"),h("b",{},mr.toFixed(3)+" g/mol")),
+          h("div",{class:"card stat"},h("span",{class:"mu sm"},"Amount of substance"),h("b",{},n.toPrecision(5)+" mol")),
+          h("div",{class:"card stat"},h("span",{class:"mu sm"},"Molar concentration"),h("b",{},c.toPrecision(5)+" mol/dm³"))),
+          h("p",{class:"mu sm"},"Assumes the entered mass is the mass of pure solute and the stated volume is the final solution volume."));
+      }catch(err){calcOut.replaceChildren(h("div",{class:"msg no"},String(err&&err.message||err)))}
+    };
+    [form,mass,volume].forEach(x=>x.addEventListener("input",calculate));
+    const solution=h("section",{class:"card chem-card"},h("h3",{},"Mass-to-concentration calculator"),h("p",{class:"mu"},"Estimate molar concentration from solute mass and final solution volume."),h("div",{class:"grid chem-inputs"},h("label",{},"Solute formula",form),h("label",{},"Mass (g)",mass),h("label",{},"Final volume (mL)",volume)),h("p",{class:"sm"},"Formula: concentration = (mass ÷ molar mass) ÷ volume in litres."),calcOut);
+    calculate();
+    root.append(balancer,solution,h("p",{class:"mu sm chem-version"},"Chemistry workspace · build "+BUILD+" · all 118 elements · no external calculation libraries."));
+    return root;
+  };
+
+  // Use the same localStorage database and theme preference; this only improves mobile navigation behavior.
+  const menu=$(".bg");
+  if(menu){
+    const sync=()=>menu.setAttribute("aria-expanded",String(document.body.classList.contains("sb")));
+    menu.setAttribute("aria-controls","nav");sync();menu.addEventListener("click",sync);
+    document.addEventListener("click",e=>{
+      if(document.body.classList.contains("sb")&&!e.target.closest("nav")&&!e.target.closest(".bg")){
+        document.body.classList.remove("sb");
+      }
+      sync();
+    });
+    document.addEventListener("keydown",e=>{
+      if(e.key==="Escape"&&!$("#dlg").open&&$("#study").hidden&&document.body.classList.contains("sb")){
+        document.body.classList.remove("sb");sync();menu.focus();
+      }
+    });
+  }
+
+  // Add focused regression checks to the existing diagnostics screen.
+  const previousSelfTest=selfTest;
+  selfTest=function(){
+    const r=previousSelfTest();
+    const check=(name,fn)=>{try{const v=fn();r.push([name,v===true,v===true?"":String(v)])}catch(e){r.push([name,false,String(e&&e.message||e)])}};
+    check("Periodic table contains 118 unique elements",()=>elementData.length===118&&new Set(elementData.map(e=>e[0])).size===118&&elementData.every((e,i)=>e[3]===i+1));
+    check("Formula parser handles nested groups",()=>{const c=formulaCounts("Ca(OH)2");return c.Ca===1&&c.O===2&&c.H===2});
+    check("Molar mass handles hydrates",()=>Math.abs(mm("CuSO4·5H2O").tot-249.677)<0.03);
+    check("Rejects mismatched formula brackets",()=>{try{mm("Ca(OH]");return false}catch(e){return true}});
+    check("Balances water formation",()=>balanceEquation("H2 + O2 -> H2O").coeffs.join(",")==="2,1,2");
+    check("Balances propane combustion",()=>balanceEquation("C3H8 + O2 -> CO2 + H2O").coeffs.join(",")==="1,5,3,4");
+    check("Verifies every atom after balancing",()=>balanceEquation("Al + HCl -> AlCl3 + H2").rows.every(x=>x.left===x.right));
+    return r;
+  };
+
+  const previousSettingsView=VIEWS.set;
+  VIEWS.set=function(){
+    const root=previousSettingsView();
+    root.append(h("p",{class:"mu sm chem-version"},"EUEE Mastery · enhanced build "+BUILD+". Existing cml4 data keys, bank IDs, progress records, and backup format are preserved."));
+    return root;
+  };
+
+  const style=document.createElement("style");
+  style.textContent=`
+    .chem-card{margin-top:1rem;padding:clamp(.9rem,2vw,1.3rem)}
+    .chem-card h3{margin-bottom:.35rem}
+    .chem-output{margin-top:.7rem;min-width:0}
+    .chem-equation{font-size:clamp(1.15rem,2.8vw,1.8rem);font-weight:750;line-height:1.6;overflow-wrap:anywhere;letter-spacing:.01em}
+    .chem-examples{align-items:flex-start}
+    .chem-examples .btn{font-size:.82rem;white-space:normal}
+    .chem-table{max-width:100%;margin-top:.6rem}
+    .chem-table table{font-variant-numeric:tabular-nums}
+    .chem-results{margin-top:.5rem}
+    .chem-results .card{padding:.8rem;min-width:0;overflow-wrap:anywhere}
+    .chem-results .stat b{font-size:clamp(1.05rem,2.3vw,1.45rem)}
+    .chem-inputs{grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr))}
+    .chem-version{padding:.7rem .1rem;text-align:center}
+    .btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+    @media(max-width:36rem){.chem-examples .btn{flex:1 1 45%}.chem-equation{font-size:1.15rem}.chem-table th,.chem-table td{padding:.35rem;font-size:.9rem}}
+  `;
+  document.head.append(style);
+})();
+
+})();
+</script>
+<script>
+window.NODL=/; wv\)/.test(navigator.userAgent);
+(()=>{const s=document.createElement("style");s.textContent="*{-webkit-tap-highlight-color:transparent}html{overscroll-behavior:none}";document.head.append(s)})();
+async function nodl(n,data){if(typeof data!=="string")return toast("Image export isn’t available in the app. Take a screenshot instead.");
+ if(!await ask(h("div",{},h("p",{},"This app can’t save files. Copy the content instead and paste it into a notes app or email."),h("p",{class:"mu sm"},n+" · "+Math.round(data.length/1024)+" KB")),{ok:"Copy to clipboard"}))return;
+ try{await navigator.clipboard.writeText(data)}catch(e){const t=document.createElement("textarea");t.value=data;document.body.append(t);t.select();document.execCommand("copy");t.remove()}
+ S.prefs.lastExport=now();save("prefs");toast("Copied. Paste it into a note to keep it.")}
+</script><script>
+(()=>{'use strict';
+const appTitle='EUEE Mastery';
+document.title=appTitle;
+const title=document.querySelector('header h1');if(title)title.textContent=appTitle;
+const meta=document.querySelector('meta[name="description"]')||document.head.appendChild(Object.assign(document.createElement('meta'),{name:'description'}));meta.content='EUEE Mastery — offline-first study workspace for EUEE, SAT and all school subjects.';
+const style=document.createElement('style');style.textContent=`
+:root{--bg:#f4f7fb;--pn:#fff;--ink:#172033;--mu:#637087;--ln:#dbe3ee;--ac:#315fe8;--on:#fff;--acs:#e8efff;--ok:#166534;--okb:#dcfce7;--no:#b91c1c;--nob:#fee2e2;--r:1rem}
+[data-t=dark]{--bg:#0c1220;--pn:#151f31;--ink:#edf3ff;--mu:#a6b5cc;--ln:#2a3850;--ac:#8ba7ff;--on:#10172b;--acs:#253456}
+.tl{display:none!important}body{display:grid;grid-template-columns:15rem minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);height:100dvh;overflow:hidden;background:var(--bg);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:0}header{grid-column:1/-1;display:flex;gap:.6rem;align-items:center;min-height:3.4rem;padding:.55rem .8rem;background:var(--pn);backdrop-filter:none;border-bottom:1px solid var(--ln)}header .hr{flex:1;min-width:0}header .hr h1{text-align:left;font-size:1.05rem}header .hr h1:before{content:'🎓';display:inline-grid;place-items:center;width:2rem;height:2rem;margin-right:.5rem;border-radius:.7rem;background:var(--acs);font-size:1rem}#th{font-size:.85rem}nav{grid-column:1;grid-row:2;display:flex;flex-direction:column;flex-wrap:nowrap;gap:.2rem;margin:0;padding:.7rem;background:var(--pn);border-right:1px solid var(--ln);overflow:auto}nav small{margin:.8rem .4rem .2rem;color:var(--mu);font-weight:700}nav .btn{justify-content:flex-start;white-space:normal;text-align:left;box-shadow:none;border:0;min-height:2.5rem}nav .btn[aria-current=page]{background:var(--acs);color:var(--ink)}#mn{grid-column:2;grid-row:2;overflow:auto;min-width:0}main{max-width:80rem;margin:auto;padding:clamp(.8rem,2vw,1.6rem)}.card{border-radius:1rem;border:1px solid var(--ln);box-shadow:0 8px 25px #15284b0b}.btn{min-height:2.45rem;border-radius:.7rem;box-shadow:none}.btn.p{background:var(--ac);color:var(--on)}input,select,textarea{background:var(--pn);border-color:var(--ln)}.workspace-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:.8rem}.workspace-grid>.card{margin:0}.workspace-output{background:var(--bg);border:1px solid var(--ln);border-radius:.75rem;padding:.8rem;overflow:auto}.workspace-canvas{width:100%;height:auto;display:block;background:#fff;border:1px solid var(--ln);border-radius:.7rem;touch-action:pan-y}.note-item{border:1px solid var(--ln);border-radius:.7rem;padding:.7rem;margin:.5rem 0;background:var(--bg)}.note-item p{white-space:pre-wrap}.tool-pill{display:inline-block;padding:.2rem .55rem;border-radius:2rem;background:var(--acs);margin:.15rem;font-size:.8rem}
+@media(max-width:52rem){body{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}header{grid-column:1;grid-row:1;flex-wrap:wrap}header .hr{flex:1}nav{position:fixed;z-index:30;top:0;bottom:0;left:0;width:min(18rem,85vw);padding-top:4rem;transform:translateX(-105%);transition:transform .2s;box-shadow:none}body.sb nav{transform:translateX(0);box-shadow:0 0 0 100vmax #0006}#mn{grid-column:1;grid-row:2}#sv,#fm,#fp{display:none}main{padding:.75rem}}
+@media print{body{display:block;height:auto;overflow:visible}header,nav{display:none!important}#mn{overflow:visible}main{padding:0}}
+`;document.head.append(style);
+// Keep original question-bank records, but use more forgiving answer normalization and numeric tolerances.
+const gradeNorm=s=>String(s??'').normalize('NFKC').toLowerCase().replace(/[₀₁₂₃₄₅₆₇₈₉]/g,c=>'0123456789'['₀₁₂₃₄₅₆₇₈₉'.indexOf(c)]).replace(/[−–—]/g,'-').replace(/\b(what is|the answer is|answer|approximately|about)\b/g,' ').replace(/[%°]/g,' ').replace(/[^\p{L}\p{N}+\-./]/gu,' ').replace(/\s+/g,' ').trim();
+const numVal=s=>{const m=String(s??'').replace(/,/g,'').match(/[-+]?(?:\d+\.?\d*|\.\d+)(?:e[-+]?\d+)?/i);return m?Number(m[0]):NaN};
+try{okOf=function(q,v){if(v==null||!String(v).trim())return false;const raw=String(v).trim();const expected=Array.isArray(q.answers)?q.answers:[];if(!expected.length)return false;
+ if(q.type==='number'){const x=numVal(raw);if(!Number.isFinite(x))return false;return expected.some(a=>{const y=numVal(a);if(!Number.isFinite(y))return gradeNorm(a)===gradeNorm(raw);const tol=q.tol==null?.01:Math.abs(+q.tol);return Math.abs(x-y)<=Math.max(tol,Math.abs(y)*tol,1e-8)})}
+ const a=gradeNorm(raw);if(!a)return false;return expected.some(e=>{const b=gradeNorm(e);if(a===b)return true;
+ // Accept exact answer phrases when an answer contains a short explanatory prefix/suffix, but not arbitrary substring matches.
+ if(b.length>=4&&a.length>=4&&(a.startsWith(b+' ')||a.endsWith(' '+b)))return true;
+ if(q.type==='formula'){return a.replace(/\s/g,'')===b.replace(/\s/g,'')}
+ return false})}}
+catch(e){}
+// A general-purpose notes store independent of question-bank progress.
+const NOTE_KEY='euemastery.notes.v1';let notes=[];try{notes=JSON.parse(localStorage.getItem(NOTE_KEY)||'[]');if(!Array.isArray(notes))notes=[]}catch(e){notes=[]}
+const persistNotes=()=>{try{localStorage.setItem(NOTE_KEY,JSON.stringify(notes));return true}catch(e){return false}};
+const TASK_KEY='euemastery.tasks.v1',FLASH_KEY='euemastery.flashcards.v1';
+const loadList=(key)=>{try{const v=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}};
+let plannerTasks=loadList(TASK_KEY),flashcards=loadList(FLASH_KEY);
+let focusRemaining=1500,focusEndAt=0,focusInterval=null,focusRunning=false,focusRenderTimer=()=>{};
+const persistTasks=()=>{try{localStorage.setItem(TASK_KEY,JSON.stringify(plannerTasks));return true}catch(e){return false}};
+const persistFlashcards=()=>{try{localStorage.setItem(FLASH_KEY,JSON.stringify(flashcards));return true}catch(e){return false}};
+const mkId=prefix=>prefix+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const timeVal=v=>{if(Number.isFinite(v)&&v>0)return v;const n=Date.parse(v);return Number.isFinite(n)?n:Date.now()};
+const noteRowsFrom=o=>{if(Array.isArray(o))return o;if(!o||typeof o!=='object')return null;const options=[o.notes,o.workspace&&o.workspace.notes,o.workspaceData&&o.workspaceData.notes,o.data&&o.data.workspaceNotes,o.data&&o.data.notes];return options.find(Array.isArray)||null};
+const cleanNote=(n,i)=>{if(!n||typeof n!=='object'||Array.isArray(n))return null;const title=String(n.title??n.name??'').trim();const body=String(n.body??n.content??n.text??n.note??'');if(!title&&!body.trim())return null;const created=timeVal(n.created??n.createdAt??n.created_at);const updated=timeVal(n.updated??n.updatedAt??n.updated_at??created);return{id:String(n.id||mkId('n')),title:title||body.trim().slice(0,55)||('Imported note '+(i+1)),subject:String(n.subject??n.category??'General').trim()||'General',body,created,updated}};
+const notePack=()=>({app:'EUEE Mastery',kind:'notes',version:1,exportedAt:new Date().toISOString(),notes});
+const workspacePack=()=>({app:'EUEE Mastery',kind:'workspace',version:1,exportedAt:new Date().toISOString(),notes, tasks:plannerTasks, flashcards});
+const importNotesData=(payload,mode='merge')=>{const rows=noteRowsFrom(payload);if(!rows)return{ok:false,error:'JSON must be a notes array or an object with a notes array. Question-bank JSON is not a notes file.'};const valid=rows.map(cleanNote).filter(Boolean);if(rows.length&&!valid.length)return{ok:false,error:'No valid notes found. Each note needs a title or body/content/text.'};if(mode==='replace'){const seen=new Set();notes=[];for(const n of valid){const key=[n.subject,n.title,n.body].join('\u0000');if(!seen.has(key)){seen.add(key);notes.push(n)}}}else{let added=0,updated=0,skipped=0;for(const n of valid){const byId=notes.findIndex(x=>String(x.id)===n.id);if(byId>=0){if(n.updated>(Number(notes[byId].updated)||0)){notes[byId]=n;updated++}else skipped++;continue}const key=[n.subject,n.title,n.body].join('\u0000');const same=notes.some(x=>[String(x.subject||'General'),String(x.title||''),String(x.body||'')].join('\u0000')===key);if(same){skipped++;continue}notes.push(n);added++}const saved=persistNotes();return{ok:true,added,updated,skipped,total:notes.length,saved}}const saved=persistNotes();return{ok:true,added:notes.length,updated:0,skipped:rows.length-valid.length,total:notes.length,saved}};
+const importNotesText=(text,mode='merge')=>{let payload;try{payload=JSON.parse(String(text))}catch(e){return{ok:false,error:'Invalid JSON: '+e.message}}return importNotesData(payload,mode)};
+const addFlashcard=(front,back,subject='General')=>{front=String(front??'').trim();back=String(back??'').trim();if(!front||!back)return false;flashcards.push({id:mkId('f'),front,back,subject:String(subject||'General'),created:Date.now(),reviews:0,known:0,again:0});persistFlashcards();try{workspaceFlashRefresh()}catch(e){}return true};
+let workspaceFlashRefresh=()=>{};
+const importWorkspaceText=(text,mode='merge')=>{let payload;try{payload=JSON.parse(String(text))}catch(e){return{ok:false,error:'Invalid JSON: '+e.message}}if(!payload||typeof payload!=='object')return{ok:false,error:'Workspace JSON must contain an object.'};let nr={ok:true,added:0,updated:0,skipped:0,total:notes.length};const noteRows=noteRowsFrom(payload);if(noteRows){nr=importNotesData(payload,mode);if(!nr.ok)return nr}let taskAdded=0,cardAdded=0;const tasks=payload.tasks??(payload.workspace&&payload.workspace.tasks),cards=payload.flashcards??(payload.workspace&&payload.workspace.flashcards);if(Array.isArray(tasks)){const valid=tasks.filter(t=>t&&typeof t==='object'&&String(t.title||'').trim()).map(t=>({id:String(t.id||mkId('t')),title:String(t.title).trim(),subject:String(t.subject||'General'),due:String(t.due||''),priority:['Low','Normal','High'].includes(t.priority)?t.priority:'Normal',done:!!t.done,created:timeVal(t.created)}));if(mode==='replace')plannerTasks=valid;else for(const t of valid){if(!plannerTasks.some(x=>x.id===t.id||([x.title,x.subject,x.due].join('|')===[t.title,t.subject,t.due]))) {plannerTasks.push(t);taskAdded++}}persistTasks()}if(Array.isArray(cards)){const valid=cards.filter(c=>c&&typeof c==='object'&&String(c.front||c.term||'').trim()&&String(c.back||c.answer||'').trim()).map(c=>({id:String(c.id||mkId('f')),front:String(c.front||c.term).trim(),back:String(c.back||c.answer).trim(),subject:String(c.subject||'General'),created:timeVal(c.created),reviews:Number(c.reviews)||0,known:Number(c.known)||0,again:Number(c.again)||0}));if(mode==='replace')flashcards=valid;else for(const c of valid){if(!flashcards.some(x=>x.id===c.id||(x.front===c.front&&x.back===c.back&&x.subject===c.subject))){flashcards.push(c);cardAdded++}}persistFlashcards()}try{workspaceFlashRefresh()}catch(e){}return{ok:true,added:nr.added||0,updated:nr.updated||0,skipped:nr.skipped||0,total:notes.length,taskAdded,cardAdded,tasks:plannerTasks.length,flashcards:flashcards.length,saved:persistNotes()}};
+window.EUEEWorkspaceData={getNotes:()=>notes,exportNotes:()=>JSON.stringify(notePack(),null,2),exportWorkspace:()=>JSON.stringify(workspacePack(),null,2),importNotesText,importWorkspaceText,getTaskCount:()=>plannerTasks.length,getFlashcardCount:()=>flashcards.length};
+const esc=s=>String(s??'');
+const subjectOptions=['Mathematics','English','Physics','Chemistry','Biology','Aptitude','SAT Reading & Writing','SAT Math','History','Geography','Economics','Civics','Computer Science','Amharic','General'];
+const glossary=[['algebra','Mathematics','A branch of mathematics using symbols and variables to represent quantities and relationships.'],['function','Mathematics','A rule that assigns each input exactly one output.'],['derivative','Mathematics','The instantaneous rate of change of a function; geometrically, the gradient of its tangent.'],['velocity','Physics','Displacement change per unit time; it includes direction.'],['acceleration','Physics','The rate of change of velocity with time.'],['force','Physics','An interaction that can change motion; the net force equals mass times acceleration in Newtonian mechanics.'],['mole','Chemistry','The amount of substance containing exactly 6.02214076 × 10²³ specified entities.'],['oxidation','Chemistry','Electron loss, or an increase in oxidation state.'],['covalent bond','Chemistry','A chemical bond formed when atoms share electron pairs.'],['osmosis','Biology','Net movement of water through a selectively permeable membrane due to a water-potential difference.'],['mitosis','Biology','Cell division that normally produces two genetically similar daughter nuclei.'],['natural selection','Biology','Differential survival and reproduction associated with heritable variation.'],['main idea','SAT Reading & Writing','The central point supported by a passage, not a minor detail.'],['evidence','SAT Reading & Writing','Information in a text or data set that supports a conclusion.'],['linear equation','SAT Math','An equation whose graph is a straight line, such as y = mx + b.'],['slope','SAT Math','Change in y divided by change in x between two points on a nonvertical line.'],['thesis','English','The main claim or controlling idea an essay develops and supports.'],['opportunity cost','Economics','The value of the next-best alternative forgone when making a choice.'],['latitude','Geography','Angular distance north or south of the Equator.'],['primary source','History','Evidence created during the period or by a participant being studied.'],['algorithm','Computer Science','A finite, ordered set of steps for solving a problem.'],['validity','Aptitude','Whether a conclusion follows logically from the premises or evidence.']];
+const htm=(tag,attrs={},...kids)=>{const n=document.createElement(tag);for(const [k,v] of Object.entries(attrs||{})){if(k==='class')n.className=v;else if(k==='text')n.textContent=v;else if(k.startsWith('on')&&typeof v==='function')n.addEventListener(k.slice(2),v);else if(v!==false&&v!=null)n.setAttribute(k,String(v))}for(const kid of kids.flat()){if(kid==null)continue;n.append(kid instanceof Node?kid:document.createTextNode(String(kid)))}return n};
+const card=(title,desc)=>{const c=htm('section',{class:'card'});c.append(htm('h3',{},title));if(desc)c.append(htm('p',{class:'mu'},desc));return c};
+VIEWS.workspace=function(){const root=htm('div',{});root.append(htm('h2',{},'Student workspace'),htm('p',{class:'mu'},'Personal notes, an offline graph plotter, a subject glossary and quick calculations. Notes are saved on this device.'));
+const grid=htm('div',{class:'workspace-grid'});root.append(grid);
+// Notes panel, including independent JSON import so notes do not have to be questions.
+const nc=card('📝 Note saver','Create, search, edit, import and export notes. Data stays on this device unless you export it.');const titleIn=htm('input',{placeholder:'Note title (e.g. Quadratic equations)',type:'text'}),sub=htm('select',{},...subjectOptions.map(s=>htm('option',{value:s},s))),bodyIn=htm('textarea',{placeholder:'Write definitions, formulas, summaries or revision notes…',rows:'6'}),search=htm('input',{type:'search',placeholder:'Search saved notes'}),list=htm('div',{}),editing={id:null};
+const noteJsonPick=htm('input',{type:'file',accept:'.json,application/json',hidden:true});let noteImportMode='merge';
+noteJsonPick.addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;try{const r=importNotesText(await f.text(),noteImportMode);if(!r.ok)return toast(r.error);noteRender();toast('Notes import complete: '+r.added+' added, '+r.updated+' updated, '+r.skipped+' skipped. '+r.total+' total notes. '+(r.saved?'Saved on this device.':'Export a copy; storage may be full.'))}catch(err){toast('Could not import notes: '+err.message)}});
+const noteRender=()=>{list.replaceChildren();const q=search.value.toLowerCase();const found=notes.filter(n=>(n.title+' '+n.subject+' '+n.body).toLowerCase().includes(q)).sort((a,b)=>(Number(b.updated)||0)-(Number(a.updated)||0));if(!found.length)list.append(htm('p',{class:'mu'},'No matching notes yet.'));found.forEach(n=>{const item=htm('article',{class:'note-item'});item.append(htm('strong',{},n.title||'Untitled note'),htm('span',{class:'tool-pill'},n.subject||'General'),htm('p',{},n.body||''),htm('small',{class:'mu'},Number.isFinite(Number(n.updated))?new Date(Number(n.updated)).toLocaleString():'Imported note'),htm('div',{class:'row'},htm('button',{class:'btn',onclick:()=>{editing.id=n.id;titleIn.value=n.title||'';sub.value=subjectOptions.includes(n.subject)?n.subject:'General';bodyIn.value=n.body||'';titleIn.focus()}},'Edit'),htm('button',{class:'btn',onclick:()=>{const blob=new Blob([n.title+'\n'+n.subject+'\n\n'+n.body],{type:'text/plain;charset=utf-8'});downloadBlob((n.title||'study-note').replace(/[^\w-]+/g,'_')+'.txt',blob)}},'Export .txt'),htm('button',{class:'btn',onclick:()=>{if(addFlashcard(n.title,n.body,n.subject))toast('Flashcard added. Open Flashcards to review it.');else toast('This note needs both a title and some content to become a flashcard.')}},'Make flashcard'),htm('button',{class:'btn d',onclick:()=>{if(confirm('Delete this note?')){notes=notes.filter(x=>x.id!==n.id);persistNotes();noteRender()}}},'Delete')));list.append(item)})};
+nc.append(htm('label',{},'Title',titleIn),htm('label',{},'Subject',sub),htm('label',{},'Note',bodyIn),htm('div',{class:'row'},htm('button',{class:'btn p',onclick:()=>{if(!titleIn.value.trim()&&!bodyIn.value.trim())return toast('Write a title or some note text first.');const t=Date.now();if(editing.id){const n=notes.find(x=>x.id===editing.id);if(n)Object.assign(n,{title:titleIn.value.trim()||'Untitled note',subject:sub.value,body:bodyIn.value,updated:t})}else notes.push({id:mkId('n'),title:titleIn.value.trim()||'Untitled note',subject:sub.value,body:bodyIn.value,created:t,updated:t});const saved=persistNotes();editing.id=null;titleIn.value='';bodyIn.value='';noteRender();toast(saved?'Note saved on this device.':'Storage is full or unavailable; export your notes to keep a copy.')}},'Save note'),htm('button',{class:'btn',onclick:()=>{editing.id=null;titleIn.value='';bodyIn.value='';sub.selectedIndex=0}},'New note'),htm('button',{class:'btn',onclick:()=>downloadBlob('EUEE-Mastery-notes.json',new Blob([JSON.stringify(notePack(),null,2)],{type:'application/json'}))},'Export notes JSON'),htm('button',{class:'btn',onclick:()=>{noteImportMode='merge';noteJsonPick.click()}},'Import notes JSON'),htm('button',{class:'btn d',onclick:()=>{if(confirm('Replace every saved note with notes from the JSON file you choose next?')){noteImportMode='replace';noteJsonPick.click()}}},'Replace notes from JSON'),htm('button',{class:'btn',onclick:()=>downloadBlob('EUEE-Mastery-workspace.json',new Blob([JSON.stringify(workspacePack(),null,2)],{type:'application/json'}))},'Export workspace backup'),noteJsonPick),search,list);search.addEventListener('input',noteRender);noteRender();grid.append(nc);
+// Offline graph plotter (canvas; no external library)
+const gc=card('📈 Graph maker','Plot y = f(x) offline. Supports arithmetic, powers, parentheses, sin, cos, tan, sqrt, abs, log and exp. Trigonometry uses radians.');const expr=htm('input',{value:'x^2',placeholder:'e.g. sin(x) or 2*x+1'}),xmin=htm('input',{type:'number',value:'-10',step:'any'}),xmax=htm('input',{type:'number',value:'10',step:'any'}),ymin=htm('input',{type:'number',value:'-5',step:'any'}),ymax=htm('input',{type:'number',value:'10',step:'any'}),canvas=htm('canvas',{class:'workspace-canvas',width:'900',height:'520','aria-label':'Function graph'}),graphMsg=htm('p',{class:'mu sm'},'Enter an expression and press Plot. Use * for multiplication, such as 2*x.');
+const plot=()=>{const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,xa=Number(xmin.value),xb=Number(xmax.value),ya=Number(ymin.value),yb=Number(ymax.value);if(!ctx)return;if(![xa,xb,ya,yb].every(Number.isFinite)||xa>=xb||ya>=yb){graphMsg.textContent='Set valid minimum and maximum values; each minimum must be smaller than its maximum.';return}let fn;try{let e=expr.value.trim().replace(/\^/g,'**').replace(/\b(sin|cos|tan|sqrt|abs|log|exp)\s*\(/g,'Math.$1(').replace(/\bpi\b/gi,'Math.PI').replace(/\be\b/g,'Math.E');if(!e||!/^[0-9xX+*/().,%\s\-A-Za-z*]+$/.test(e))throw Error('Use only x, numbers, operators and supported math functions.');if(/\b(?:window|document|globalThis|constructor|prototype|Function|eval|import|fetch|localStorage|Math\.(?!sin|cos|tan|sqrt|abs|log|exp|PI|E\b))\b/i.test(e))throw Error('Unsupported token.');fn=new Function('x','"use strict";return ('+e.replace(/\bX\b/g,'x')+');');const test=fn(1);if(typeof test!=='number')throw Error('Expression must return a number.')}catch(err){graphMsg.textContent='Expression error: '+err.message;return}
+ctx.clearRect(0,0,w,h);ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);const px=x=>(x-xa)/(xb-xa)*w,py=y=>h-(y-ya)/(yb-ya)*h;ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;for(let i=0;i<=10;i++){const xx=i*w/10,yy=i*h/10;ctx.beginPath();ctx.moveTo(xx,0);ctx.lineTo(xx,h);ctx.stroke();ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(w,yy);ctx.stroke()}ctx.strokeStyle='#64748b';ctx.lineWidth=2;if(xa<=0&&xb>=0){ctx.beginPath();ctx.moveTo(px(0),0);ctx.lineTo(px(0),h);ctx.stroke()}if(ya<=0&&yb>=0){ctx.beginPath();ctx.moveTo(0,py(0));ctx.lineTo(w,py(0));ctx.stroke()}ctx.strokeStyle='#315fe8';ctx.lineWidth=3;ctx.beginPath();let started=false,segments=0;for(let i=0;i<=w;i++){const x=xa+(xb-xa)*i/w;let y;try{y=fn(x)}catch(e){y=NaN}if(!Number.isFinite(y)||y<ya-(yb-ya)*3||y>yb+(yb-ya)*3){started=false;continue}const yy=py(y);if(!started){ctx.moveTo(i,yy);started=true;segments++}else ctx.lineTo(i,yy)}ctx.stroke();ctx.fillStyle='#334155';ctx.font='15px system-ui';ctx.fillText('x: '+xa+' to '+xb,12,22);ctx.fillText('y: '+ya+' to '+yb,12,42);graphMsg.textContent='Plotted '+expr.value+' · '+segments+' visible curve segment(s). To save it, use “Save graph as PNG”.'};
+gc.append(htm('label',{},'Function y =',expr),htm('div',{class:'grid'},htm('label',{},'x minimum',xmin),htm('label',{},'x maximum',xmax),htm('label',{},'y minimum',ymin),htm('label',{},'y maximum',ymax)),htm('div',{class:'row'},htm('button',{class:'btn p',onclick:plot},'Plot graph'),htm('button',{class:'btn',onclick:()=>downloadBlob('EUEE-Mastery-graph.png',new Promise(resolve=>canvas.toBlob(resolve,'image/png')))},'Save graph as PNG'),htm('button',{class:'btn',onclick:()=>{expr.value='sin(x)';plot()}},'Example: sin(x)'),htm('button',{class:'btn',onclick:()=>{expr.value='x^2';plot()}},'Example: x²')),canvas,graphMsg);grid.append(gc);setTimeout(plot,0);
+// Glossary across subjects
+const dc=card('📖 Subject dictionary','A starter glossary for exam vocabulary. Search a term or subject; definitions are concise study aids.');const dq=htm('input',{type:'search',placeholder:'Search terms, definitions or subjects'}),dl=htm('div',{});const dictRender=()=>{dl.replaceChildren();const q=dq.value.toLowerCase();const rows=glossary.filter(r=>r.join(' ').toLowerCase().includes(q));rows.forEach(([term,subject,def])=>dl.append(htm('article',{class:'note-item'},htm('strong',{},term),htm('span',{class:'tool-pill'},subject),htm('p',{},def))));if(!rows.length)dl.append(htm('p',{class:'mu'},'No glossary match. Try another spelling or add it to your notes.'))};dq.addEventListener('input',dictRender);dc.append(dq,dl);dictRender();grid.append(dc);
+// Quick calculator
+const cc=card('🧮 Quick calculator','Offline arithmetic calculator.');const ci=htm('input',{type:'text',placeholder:'e.g. (25*4)/5 + sqrt(81)'}),co=htm('div',{class:'workspace-output','aria-live':'polite'},'Result appears here.');const calc=()=>{try{let s=ci.value.trim();if(!s)return co.textContent='Result appears here.';if(!/^[0-9+\-*/().,%\s^A-Za-z]+$/.test(s)||/\b(?:window|document|globalThis|constructor|prototype|Function|eval|fetch|import)\b/i.test(s))throw Error('Unsupported expression');s=s.replace(/\^/g,'**').replace(/\b(sqrt|abs|sin|cos|tan|log|exp)\s*\(/g,'Math.$1(');const v=Function('"use strict";return ('+s+')')();if(typeof v!=='number'||!Number.isFinite(v))throw Error('Result is not a finite number');co.textContent=String(v)}catch(e){co.textContent='Check the expression: '+e.message}};cc.append(htm('label',{},'Expression',ci),htm('div',{class:'row'},htm('button',{class:'btn p',onclick:calc},'Calculate'),htm('button',{class:'btn',onclick:()=>{ci.value='';calc()}},'Clear')),co);grid.append(cc);
+// Persistent study planner.
+const pc=card('🗓️ Study planner','Turn revision goals into a simple subject-based task list with due dates and completion tracking.');const taskTitle=htm('input',{type:'text',placeholder:'e.g. Revise circular motion'}),taskSubject=htm('select',{},...subjectOptions.map(s=>htm('option',{value:s},s))),taskDue=htm('input',{type:'date'}),taskPriority=htm('select',{},...['Normal','High','Low'].map(x=>htm('option',{value:x},x))),taskList=htm('div',{}),taskSummary=htm('p',{class:'mu sm'});
+const taskRender=()=>{taskList.replaceChildren();const done=plannerTasks.filter(t=>t.done).length;taskSummary.textContent=plannerTasks.length+' tasks · '+done+' completed · '+(plannerTasks.length-done)+' remaining';const rows=[...plannerTasks].sort((a,b)=>Number(a.done)-Number(b.done)||(a.due||'9999-99-99').localeCompare(b.due||'9999-99-99')||({High:0,Normal:1,Low:2}[a.priority]??1)-({High:0,Normal:1,Low:2}[b.priority]??1));if(!rows.length)taskList.append(htm('p',{class:'mu'},'No tasks yet. Add your next study target above.'));rows.forEach(t=>{const row=htm('article',{class:'note-item'}),check=htm('input',{type:'checkbox',...(t.done?{checked:true}:{})});check.style.width='auto';check.addEventListener('change',()=>{t.done=check.checked;persistTasks();taskRender()});row.append(htm('div',{class:'row'},check,htm('strong',{},t.title),htm('span',{class:'tool-pill'},t.subject),htm('span',{class:'tool-pill'},t.priority)),htm('p',{class:'mu sm'},(t.due?'Due '+t.due+' · ':'No due date · ')+(t.done?'Completed':'Open')),htm('div',{class:'row'},htm('button',{class:'btn',onclick:()=>{taskTitle.value=t.title;taskSubject.value=subjectOptions.includes(t.subject)?t.subject:'General';taskDue.value=t.due||'';taskPriority.value=t.priority||'Normal';plannerTasks=plannerTasks.filter(x=>x.id!==t.id);persistTasks();taskRender();taskTitle.focus()}},'Edit'),htm('button',{class:'btn d',onclick:()=>{if(confirm('Delete this study task?')){plannerTasks=plannerTasks.filter(x=>x.id!==t.id);persistTasks();taskRender()}}},'Delete')));taskList.append(row)})};
+pc.append(htm('label',{},'Task',taskTitle),htm('label',{},'Subject',taskSubject),htm('label',{},'Due date',taskDue),htm('label',{},'Priority',taskPriority),htm('div',{class:'row'},htm('button',{class:'btn p',onclick:()=>{const title=taskTitle.value.trim();if(!title)return toast('Enter a task first.');plannerTasks.push({id:mkId('t'),title,subject:taskSubject.value,due:taskDue.value,priority:taskPriority.value,done:false,created:Date.now()});const ok=persistTasks();taskTitle.value='';taskDue.value='';taskRender();toast(ok?'Study task saved.':'Task added for this session, but storage may be full.')}},'Add task'),htm('button',{class:'btn',onclick:()=>{taskTitle.value='';taskDue.value='';taskPriority.value='Normal'}},'Clear fields'),htm('button',{class:'btn',onclick:()=>downloadBlob('EUEE-Mastery-study-plan.json',new Blob([JSON.stringify({app:'EUEE Mastery',kind:'study-plan',version:1,tasks:plannerTasks},null,2)],{type:'application/json'}))},'Export plan JSON')),taskSummary,taskList);taskRender();grid.append(pc);
+// Flashcards made manually or directly from notes. All review counters persist offline.
+const fc=card('🃏 Flashcards','Create active-recall cards, flip to reveal the answer, and track what you know. You can turn any note into a card above.');const fcFront=htm('input',{type:'text',placeholder:'Front: term, question or formula'}),fcBack=htm('textarea',{rows:'3',placeholder:'Back: definition, answer or explanation'}),fcSubject=htm('select',{},...subjectOptions.map(s=>htm('option',{value:s},s))),fcPreview=htm('div',{class:'note-item'}),fcDeck=htm('div',{});let fcIndex=0,fcRevealed=false;const fcRender=()=>{fcPreview.replaceChildren();fcDeck.replaceChildren();if(!flashcards.length){fcPreview.append(htm('p',{class:'mu'},'Your deck is empty. Add a card or convert a saved note into one.'))}else{fcIndex=((fcIndex%flashcards.length)+flashcards.length)%flashcards.length;const c=flashcards[fcIndex];fcPreview.append(htm('div',{class:'row'},htm('span',{class:'tool-pill'},c.subject||'General'),htm('span',{class:'tool-pill'},'Card '+(fcIndex+1)+' of '+flashcards.length)),htm('h3',{},c.front),htm('p',{},fcRevealed?c.back:'Think of the answer, then reveal it.'),htm('div',{class:'row'},htm('button',{class:'btn',onclick:()=>{fcRevealed=!fcRevealed;fcRender()}},fcRevealed?'Hide answer':'Reveal answer'),htm('button',{class:'btn',onclick:()=>{fcIndex=(fcIndex+1)%flashcards.length;fcRevealed=false;fcRender()}},'Next card'),htm('button',{class:'btn p',onclick:()=>{c.reviews=(Number(c.reviews)||0)+1;c.known=(Number(c.known)||0)+1;persistFlashcards();fcIndex=(fcIndex+1)%flashcards.length;fcRevealed=false;fcRender();toast('Marked as known.')}},'I knew it'),htm('button',{class:'btn',onclick:()=>{c.reviews=(Number(c.reviews)||0)+1;c.again=(Number(c.again)||0)+1;persistFlashcards();fcIndex=(fcIndex+1)%flashcards.length;fcRevealed=false;fcRender();toast('Card will stay in your deck for more practice.')}},'Study again')),htm('p',{class:'mu sm'},'Review stats: '+(Number(c.known)||0)+' known · '+(Number(c.again)||0)+' study-again · '+(Number(c.reviews)||0)+' total reviews'))}const sorted=[...flashcards];sorted.forEach(c=>{const row=htm('article',{class:'note-item'});row.append(htm('strong',{},c.front),htm('span',{class:'tool-pill'},c.subject||'General'),htm('p',{class:'mu sm'},String(c.back).slice(0,140)),htm('div',{class:'row'},htm('button',{class:'btn',onclick:()=>{fcIndex=flashcards.findIndex(x=>x.id===c.id);fcRevealed=false;fcRender()}},'Study this'),htm('button',{class:'btn d',onclick:()=>{if(confirm('Delete this flashcard?')){flashcards=flashcards.filter(x=>x.id!==c.id);persistFlashcards();fcRender()}}},'Delete')));fcDeck.append(row)});};workspaceFlashRefresh=fcRender;
+fc.append(htm('label',{},'Subject',fcSubject),htm('label',{},'Front',fcFront),htm('label',{},'Back',fcBack),htm('div',{class:'row'},htm('button',{class:'btn p',onclick:()=>{if(!addFlashcard(fcFront.value,fcBack.value,fcSubject.value))return toast('Fill in both the front and back.');fcFront.value='';fcBack.value='';fcRender();toast('Flashcard saved.')}},'Add flashcard'),htm('button',{class:'btn',onclick:()=>downloadBlob('EUEE-Mastery-flashcards.json',new Blob([JSON.stringify({app:'EUEE Mastery',kind:'flashcards',version:1,flashcards},null,2)],{type:'application/json'}))},'Export cards JSON'),htm('button',{class:'btn',onclick:()=>{const f=htm('input',{type:'file',accept:'.json,application/json',hidden:true});f.addEventListener('change',async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const r=importWorkspaceText(await file.text(),'merge');toast(r.ok?'Import complete. Flashcards: '+(r.flashcards??flashcards.length):r.error);fcRender()});f.click()}},'Import cards / workspace JSON')),fcPreview,htm('h3',{},'Your deck'),fcDeck);fcRender();grid.append(fc);
+// Offline focus timer with pause / reset and no external service.
+const tc=card('⏱️ Focus timer','A lightweight Pomodoro timer for focused revision. This timer runs in this page and does not need internet.');const timerDisplay=htm('div',{class:'timer-display','aria-live':'polite'},'25:00'),timerMinutes=htm('input',{type:'number',min:'1',max:'180',value:String(Math.max(1,Math.round(focusRemaining/60)))}),timerState=htm('p',{class:'mu sm'},focusRunning?'Focus session running. Keep this page open.':'Ready for a focused study session.'),timerStart=htm('button',{class:'btn p'},'Start'),timerReset=htm('button',{class:'btn'},'Reset');const boundedMinutes=()=>Math.max(1,Math.min(180,Number(timerMinutes.value)||25));const timerDraw=()=>{if(focusRunning)focusRemaining=Math.max(0,Math.ceil((focusEndAt-Date.now())/1000));timerDisplay.textContent=String(Math.floor(focusRemaining/60)).padStart(2,'0')+':'+String(focusRemaining%60).padStart(2,'0');timerStart.textContent=focusRunning?'Pause':'Start';timerState.textContent=focusRunning?'Focus session running. Keep this page open.':(focusRemaining===0?'Session complete. Take a short break, then begin again.':'Ready for a focused study session.')};focusRenderTimer=timerDraw;timerStart.addEventListener('click',()=>{if(focusRunning){focusRemaining=Math.max(0,Math.ceil((focusEndAt-Date.now())/1000));clearInterval(focusInterval);focusInterval=null;focusRunning=false;timerDraw();return}if(!focusRemaining)focusRemaining=boundedMinutes()*60;focusEndAt=Date.now()+focusRemaining*1000;focusRunning=true;timerDraw();if(focusInterval)clearInterval(focusInterval);focusInterval=setInterval(()=>{focusRemaining=Math.max(0,Math.ceil((focusEndAt-Date.now())/1000));if(focusRemaining<=0){focusRemaining=0;clearInterval(focusInterval);focusInterval=null;focusRunning=false;toast('Focus session complete!')}focusRenderTimer()},250)});timerReset.addEventListener('click',()=>{clearInterval(focusInterval);focusInterval=null;focusRunning=false;focusRemaining=boundedMinutes()*60;timerDraw()});timerMinutes.addEventListener('change',()=>{if(!focusRunning){focusRemaining=boundedMinutes()*60;timerDraw()}});tc.append(htm('label',{},'Focus length (minutes)',timerMinutes),timerDisplay,htm('div',{class:'row'},timerStart,timerReset),timerState);timerDraw();grid.append(tc);
+return root};
+function downloadBlob(name,blobOrPromise){Promise.resolve(blobOrPromise).then(blob=>{if(!blob)return toast('Could not create the file in this browser.');try{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.style.display='none';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);toast('Download started.')}catch(e){toast('This browser blocked the download. Try its Share or Download menu.')}}).catch(()=>toast('Could not create the file.'))}
+// Correct the offline image-export path: blobs should be downloaded, not routed to the WebView text-copy fallback.
+try{dl=function(name,data,mime){if(data instanceof Blob){downloadBlob(name,data);return}if(window.NODL){nodl(name,data);return}const b=new Blob([data],{type:(mime||'application/json')+';charset=utf-8'});downloadBlob(name,b);S.prefs.lastExport=Date.now();save('prefs')}}catch(e){}
+// Add navigation entry and dedicated full-screen control; no decorative macOS traffic lights.
+const nav=document.getElementById('nav');if(nav&&!nav.querySelector('[data-v="workspace"]')){const head=htm('small',{},'STUDY TOOLS'),btn=htm('button',{class:'btn','data-v':'workspace'},htm('span',{'aria-hidden':'true'},'🧰'),'Student workspace');nav.insertBefore(head,nav.querySelector('.bk'));nav.insertBefore(btn,nav.querySelector('.bk'));btn.addEventListener('click',()=>document.body.classList.remove('sb'))}
+const header=document.querySelector('header');if(header&&!document.getElementById('fullScreenBtn')){const b=htm('button',{class:'btn',id:'fullScreenBtn',type:'button','aria-label':'Enter full screen',title:'Enter full screen'},'⛶ Full screen');b.addEventListener('click',()=>{const p=document.documentElement;if(!document.fullscreenElement&&p.requestFullscreen)p.requestFullscreen().then(()=>{b.textContent='⛶ Exit full screen';b.setAttribute('aria-label','Exit full screen')}).catch(()=>toast('Full screen is unavailable in this browser.'));else if(document.exitFullscreen)document.exitFullscreen().catch(()=>{})});document.addEventListener('fullscreenchange',()=>{const on=!!document.fullscreenElement;b.textContent=on?'⛶ Exit full screen':'⛶ Full screen';b.setAttribute('aria-label',on?'Exit full screen':'Enter full screen')});header.append(b)}
+// Replace Chemistry-only labels and default subject for question generation.
+const patchLabels=()=>{document.title=appTitle;const t=document.querySelector('header h1');if(t)t.textContent=appTitle;document.querySelectorAll('.chem-version').forEach(e=>{e.textContent=e.textContent.replace(/Chemistry Mastery Lab/g,appTitle).replace(/Chemistry workspace/g,'All-subject workspace')});};patchLabels();
+// Broaden AI question studio subject selector without requiring external services.
+const origGen=VIEWS.gen;VIEWS.gen=function(){const el=origGen();const subj=el.querySelector('input');if(subj){subj.value='Mathematics';subj.placeholder='Choose or enter any subject';const dl=htm('datalist',{id:'euee-subjects'},...subjectOptions.map(s=>htm('option',{value:s})));subj.setAttribute('list','euee-subjects');subj.after(dl)}const h2=el.querySelector('h2');if(h2)h2.textContent='All-subject question studio';return el};
+// Override heading for the chemistry utility page so it is presented as one subject toolset.
+const prevTools=VIEWS.tools;VIEWS.tools=function(){const el=prevTools();const h2=el.querySelector('h2');if(h2)h2.textContent='Chemistry tools';return el};
+// Keep title updated on navigation rerenders and make the mobile menu usable.
+const originalGo=go;go=function(v){originalGo(v);patchLabels();if(v==='workspace')document.body.classList.remove('sb')};
+// Better scoring should also recognize selected MC answers whose displayed option is a correct alias.
+try{const originalBuild=buildOpts;buildOpts=function(q,pool){const opts=originalBuild(q,pool);return opts}}catch(e){}
+// Diagnostic card for this update
+console.info('EUEE Mastery upgrade loaded: offline notes, graph plotter, glossary, calculator, fullscreen and flexible grading.');
+})();
+
+</script><script>
+(()=>{'use strict';
+const css=document.createElement('style');css.id='euee-premium-refresh';css.textContent=`
+:root{--bg:#f3f6fc;--pn:#fff;--ink:#15213b;--mu:#68758e;--ln:#dfe6f2;--ac:#4f46e5;--on:#fff;--acs:#eeedff;--sh:0 10px 30px #233b6810,0 2px 5px #233b6808}
+[data-t=dark]{--bg:#0b1020;--pn:#121a2d;--ink:#edf2ff;--mu:#a4b1cc;--ln:#26334d;--ac:#a5b4fc;--on:#151633;--acs:#252747;--sh:0 12px 32px #0003}
+html{scroll-behavior:smooth;scrollbar-color:var(--ln) transparent}body{background:radial-gradient(ellipse at 82% -12%,color-mix(in srgb,var(--ac) 12%,transparent),transparent 44%),var(--bg);font-size:15px;line-height:1.6}
+header{position:relative;isolation:isolate;min-height:4.25rem;padding:.65rem 1.05rem;background:color-mix(in srgb,var(--pn) 90%,transparent);border-bottom:1px solid color-mix(in srgb,var(--ln) 75%,transparent);box-shadow:0 5px 24px #17255408}
+header:after{content:"";position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#6366f1,#8b5cf6,#06b6d4);z-index:-1}
+header .hr{gap:.65rem;align-items:center}header .hr h1{font-size:1.12rem;letter-spacing:-.035em;font-weight:800;line-height:1.2;display:flex;align-items:center;min-width:0;color:var(--ink)}
+header .hr h1:before{content:"✦";width:2.45rem;height:2.45rem;flex:0 0 2.45rem;margin-right:.72rem;border-radius:.85rem;background:linear-gradient(145deg,#6366f1,#8b5cf6 60%,#0ea5e9);color:#fff;box-shadow:0 5px 14px #6366f144;font-size:1.2rem;display:grid;place-items:center}
+#headerTagline{display:block;font-size:.73rem;font-weight:500;letter-spacing:.015em;color:var(--mu);margin-top:.16rem}
+#sv{font-size:.72rem;white-space:nowrap;border-color:color-mix(in srgb,var(--ac) 20%,var(--ln));background:var(--acs);color:var(--ink)}
+header .btn{min-width:2.45rem;min-height:2.45rem;border-radius:.8rem;background:var(--pn);border-color:var(--ln);transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}header .btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px #17255412;border-color:color-mix(in srgb,var(--ac) 50%,var(--ln))}
+#fullScreenBtn{width:2.55rem;min-width:2.55rem;height:2.55rem;padding:0;display:grid;place-items:center;font-size:1.35rem;font-weight:700;border-radius:.85rem;background:var(--acs);border-color:transparent;color:var(--ac)}
+nav{padding:1rem .7rem;gap:.32rem;background:color-mix(in srgb,var(--pn) 96%,var(--bg));border-right:1px solid var(--ln)}nav .btn{position:relative;display:flex;align-items:center;gap:.65rem;padding:.65rem .85rem;border-radius:.8rem;font-size:.91rem;font-weight:650;color:var(--mu);transition:background .15s,color .15s,transform .15s}nav .btn:hover{background:var(--bg);color:var(--ink);transform:translateX(2px)}nav .btn[aria-current=page]{background:linear-gradient(100deg,var(--acs),color-mix(in srgb,var(--acs) 35%,var(--pn)));color:var(--ac);box-shadow:inset 3px 0 var(--ac)}nav small{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;margin:1.1rem .65rem .4rem}
+#mn{background:transparent}main{padding:clamp(.9rem,2.5vw,2rem);max-width:88rem}h2{font-size:clamp(1.25rem,2vw,1.65rem);font-weight:800;letter-spacing:-.035em}h3{font-weight:750;letter-spacing:-.02em}
+.card{position:relative;border-radius:1.15rem;background:var(--pn);border:1px solid var(--ln);box-shadow:var(--sh);padding:clamp(.9rem,2vw,1.25rem);margin:.85rem 0;transition:border-color .18s,box-shadow .18s,transform .18s}.grid>.card:hover{border-color:color-mix(in srgb,var(--ac) 25%,var(--ln));box-shadow:0 12px 30px #17255410}
+.btn{font-weight:650;border-radius:.8rem;transition:transform .14s ease,box-shadow .14s ease,border-color .14s ease}.btn:active{transform:scale(.975)}.btn.p{box-shadow:0 5px 13px color-mix(in srgb,var(--ac) 20%,transparent)}.btn.p:hover{filter:brightness(1.04);box-shadow:0 7px 18px color-mix(in srgb,var(--ac) 25%,transparent)}
+input,select,textarea{border-radius:.75rem;transition:border-color .15s,box-shadow .15s}input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 16%,transparent)}label{font-size:.9rem}table{font-size:.92rem}th{color:var(--mu);font-size:.8rem;text-transform:uppercase;letter-spacing:.04em}td,th{padding:.65rem .55rem}
+.hero{border:1px solid color-mix(in srgb,var(--ac) 13%,var(--ln));box-shadow:var(--sh);background:linear-gradient(125deg,var(--acs),var(--pn) 76%)}.pill,.chip,.tool-pill{border-radius:999px}.bar{background:color-mix(in srgb,var(--ln) 75%,transparent)}.bar i{border-radius:inherit}
+#toast{box-shadow:0 10px 35px #0002;font-weight:600}dialog{box-shadow:0 25px 80px #0003}
+.workspace-grid{gap:1rem}.workspace-grid>.card{min-width:0}.workspace-canvas{box-shadow:inset 0 0 0 1px #fff}
+@media(min-width:53rem){header .hr h1{flex:1;text-align:left}nav{box-shadow:inset -1px 0 var(--ln)}#app{min-width:0}}
+@media(max-width:52rem){header{gap:.45rem;padding:.55rem .65rem;min-height:4rem}header .hr{gap:.4rem;flex-wrap:nowrap}header .hr h1{font-size:.95rem;flex:1}header .hr h1:before{width:2.1rem;height:2.1rem;flex-basis:2.1rem;margin-right:.5rem;border-radius:.72rem}#headerTagline{font-size:.65rem}#sv{display:none}#fullScreenBtn{width:2.3rem;min-width:2.3rem;height:2.3rem}main{padding:.8rem}.card{margin:.65rem 0;border-radius:1rem}.grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr))}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+`;document.head.append(css);
+// Create a two-line brand lockup without disturbing the existing title update logic.
+const header=document.querySelector('header'),hr=header&&header.querySelector('.hr'),title=header&&header.querySelector('h1');
+if(title){title.textContent='EUEE Mastery';let tagline=document.getElementById('headerTagline');if(!tagline){tagline=document.createElement('span');tagline.id='headerTagline';tagline.textContent='Your smart study companion';title.insertAdjacentElement('afterend',tagline)}
+// Keep the brand and tagline grouped together while preserving existing selectors.
+if(!document.getElementById('brandLockup')){const wrap=document.createElement('div');wrap.id='brandLockup';wrap.style.cssText='display:flex;flex-direction:column;justify-content:center;min-width:0;flex:1';title.parentNode.insertBefore(wrap,title);wrap.append(title,tagline)} }
+// Replace any previous text-based fullscreen control with a clean icon-only accessible button.
+const old=document.getElementById('fullScreenBtn');if(old)old.remove();
+if(header){const b=document.createElement('button');b.className='btn';b.id='fullScreenBtn';b.type='button';b.textContent='⛶';b.setAttribute('aria-label','Enter full screen');b.title='Enter full screen';b.addEventListener('click',()=>{if(document.fullscreenElement){document.exitFullscreen?.().catch(()=>{})}else if(document.documentElement.requestFullscreen){document.documentElement.requestFullscreen().catch(()=>{if(typeof toast==='function')toast('Full screen is unavailable in this browser.')})}else if(typeof toast==='function')toast('Full screen is unavailable in this browser.')});document.addEventListener('fullscreenchange',()=>{const on=!!document.fullscreenElement;b.textContent=on?'⛶':'⛶';b.setAttribute('aria-label',on?'Exit full screen':'Enter full screen');b.title=on?'Exit full screen':'Enter full screen'});header.append(b)}
+// Improve navigation affordance with compact subject-tool iconography.
+const icons={'dash':'⌂','lib':'▤','note':'✎','imp':'⇧','exp':'⇩','set':'⚙','workspace':'▦'};document.querySelectorAll('#nav [data-v]').forEach(btn=>{const key=btn.getAttribute('data-v');if(btn.dataset.iconReady)return;btn.dataset.iconReady='1';const icon=document.createElement('span');icon.setAttribute('aria-hidden','true');icon.textContent=icons[key]||'•';icon.style.cssText='display:inline-grid;place-items:center;flex:0 0 1.45rem;width:1.45rem;height:1.45rem;border-radius:.45rem;background:color-mix(in srgb,var(--ac) 9%,var(--pn));font-size:1rem';btn.prepend(icon)});
+})();
+
+</script>
+<script>
+(()=>{'use strict';
+// Keep the theme control icon-only while preserving its accessible label.
+const themeBtn=document.getElementById('th');
+const themeGlyph=dark=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${dark?'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>':'<path d="M20.9 13A8.5 8.5 0 0 1 11 3.1 8.5 8.5 0 1 0 20.9 13Z"/>'}</svg>`;
+const paintTheme=()=>{if(!themeBtn)return;const dark=document.documentElement.dataset.t==='dark';themeBtn.innerHTML=themeGlyph(dark);themeBtn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');themeBtn.title=dark?'Switch to light mode':'Switch to dark mode';themeBtn.classList.add('icon-only')};
+if(themeBtn){themeBtn.textContent='';paintTheme();themeBtn.addEventListener('click',()=>setTimeout(paintTheme,0));new MutationObserver(paintTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-t']})}
+const style=document.createElement('style');style.textContent=`#th.icon-only{width:2.55rem;min-width:2.55rem;height:2.55rem;display:grid;place-items:center;padding:0;border-radius:.85rem;color:var(--ac);background:var(--acs);border-color:transparent}#th.icon-only svg{display:block}#fullScreenBtn{font-size:1.45rem;line-height:1}#headerTagline{white-space:nowrap}#brandLockup{flex:1;min-width:0}.timer-display{font-size:clamp(2.6rem,8vw,4rem);font-variant-numeric:tabular-nums;font-weight:850;letter-spacing:-.05em;text-align:center;padding:1rem;border-radius:1rem;border:1px solid var(--ln);background:var(--bg);margin:.75rem 0}.note-item .row{align-items:center}.note-item .row input[type=checkbox]{width:1.1rem;height:1.1rem;flex:none}#noteJsonInput{display:none}@media(max-width:52rem){#th.icon-only{width:2.3rem;min-width:2.3rem;height:2.3rem}#headerTagline{white-space:normal}}`;document.head.append(style);
+// The Import page now accepts note JSON and full workspace backups as well as question-bank JSON.
+if(window.EUEEWorkspaceData&&typeof VIEWS!=='undefined'&&typeof go==='function'){
+ const originalImportView=VIEWS.imp;
+ VIEWS.imp=function(){const el=originalImportView();const box=h('section',{class:'card'}),ta=h('textarea',{rows:8,placeholder:'Paste notes JSON here. Accepts an array of notes or {"notes":[...]}. A full workspace backup may also be imported.'}),msg=h('p',{class:'mu sm','aria-live':'polite'},'Notes JSON is independent of question-bank JSON. Merge is the safe default and skips duplicates.'),pick=h('input',{type:'file',accept:'.json,application/json',hidden:true});let mode='merge';
+ const doImport=async txt=>{const r=window.EUEEWorkspaceData.importWorkspaceText(txt,mode);if(!r.ok){msg.textContent=r.error;toast(r.error);return}msg.textContent='Import complete: '+(r.added||0)+' notes added, '+(r.updated||0)+' updated, '+(r.skipped||0)+' duplicates/skipped; '+r.total+' notes total; '+(r.taskAdded||0)+' tasks and '+(r.cardAdded||0)+' flashcards added.';toast('Notes/workspace JSON imported.');ta.value=''};
+ pick.addEventListener('change',async e=>{const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;try{await doImport(await f.text())}catch(err){msg.textContent='Could not read file: '+err.message}});
+ box.append(h('h2',{},'Import study notes / workspace JSON'),h('p',{class:'mu'},'Import your class notes, flashcards and study plan without converting them into questions. Files are processed locally in this HTML file; nothing is uploaded.'),h('label',{},'Paste JSON',ta),h('div',{class:'row'},h('button',{class:'btn p',onclick:()=>{mode='merge';doImport(ta.value)}},'Import and merge'),h('button',{class:'btn d',onclick:()=>{if(confirm('Replace your saved notes, planner tasks and flashcards with data from this JSON? Question banks and question progress will be untouched.')){mode='replace';doImport(ta.value)}}},'Replace workspace data'),h('button',{class:'btn',onclick:()=>{mode='merge';pick.click()}},'Choose JSON file'),h('button',{class:'btn',onclick:()=>{ta.value=window.EUEEWorkspaceData.exportWorkspace();msg.textContent='Workspace JSON loaded into the editor. You can save it or use it as a backup.'}},'Load current workspace JSON'),h('button',{class:'btn',onclick:()=>{const b=new Blob([window.EUEEWorkspaceData.exportWorkspace()],{type:'application/json'});const url=URL.createObjectURL(b),a=document.createElement('a');a.href=url;a.download='EUEE-Mastery-workspace-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);toast('Workspace backup exported.')}},'Export workspace backup')),msg,pick);
+ el.append(box);return el};
+}
+// Make the built-in full backup cover the independent workspace stores too.
+if(typeof backup==='function'&&typeof restore==='function'&&window.EUEEWorkspaceData){
+ backup=function(){const d={};for(const k in DEF)if(k!=='meta')d[k]=S[k];d.sessions={...S.sessions,active:null};let workspace={};try{workspace=JSON.parse(window.EUEEWorkspaceData.exportWorkspace())}catch(e){}dl('EUEE-Mastery-full-backup-'+stamp()+'.json',JSON.stringify({app:'cml',v:4,at:now(),data:d,workspace},null,2));toast('Full backup exported, including question banks, progress, notes, tasks and flashcards.')};
+ restore=async function(f){if(!f)return;let o;try{o=JSON.parse(await f.text())}catch(e){return toast('Backup is not valid JSON: '+e.message)}if(!o||o.app!=='cml'||kind(o.data)!=='o')return toast('This file is not an EUEE Mastery-compatible full backup. Use Import for notes or workspace JSON.');if(o.v>4)return toast('This backup comes from a newer version (v'+o.v+') and cannot be restored safely.');const bad=Object.keys(DEF).filter(k=>k!=='meta'&&o.data[k]!=null&&kind(o.data[k])!==kind(DEF[k]));if(bad.length)return toast('Backup is damaged. Invalid sections: '+bad.join(', '));if(!await ask('Restore the full backup from '+fmt(o.at)+'? This replaces saved question banks, progress and preferences'+(o.workspace?' plus notes, planner tasks and flashcards':'')+' on this device.',{ok:'Restore full backup',danger:true}))return;for(const k in DEF)if(k!=='meta'&&o.data[k]!=null)S[k]=o.data[k];S.prefs={...DEF.prefs,...S.prefs};S.sessions={...DEF.sessions,...S.sessions,active:null};if(!Array.isArray(S.sessions.log))S.sessions.log=[];cleanBanks();if(!S.banks.length)S.banks=[sampleBank()];if(!S.banks.some(b=>b.id===S.prefs.bank))S.prefs.bank=S.banks[0].id;if(o.workspace){const wr=window.EUEEWorkspaceData.importWorkspaceText(JSON.stringify(o.workspace),'replace');if(!wr.ok)return toast('Question data restored, but workspace restore failed: '+wr.error)}W=null;applyPrefs();toast(save()?'Full backup restored.':'Restored for this session, but saving failed.');go('dash')};
+}
+// Hide any desktop-window traffic lights and remove visible labels from icon buttons.
+document.querySelectorAll('.tl').forEach(e=>e.remove());
+})();
+</script>
+
+</body></html>
